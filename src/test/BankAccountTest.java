@@ -32,6 +32,6 @@ public class BankAccountTest {
     public void testCloseExistingAccount() {
         BankAccount testAccount = new BankAccount();
         testAccount.closeAccount();
-        assertFalse(testAccount.getAccountStatus());
+        assertFalse(testAccount.getStatus());
     }
 }

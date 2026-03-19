@@ -3,15 +3,15 @@ package main;
 public class BankAccount {
 
     private double balance;
-    private boolean active;
+    private boolean open;
 
     public BankAccount() {
         this.balance = 0;
-        this.active = true;
+        this.open = true;
     }
 
     public void deposit(double amount) {
-        if(amount > 0 && active) {
+        if(amount > 0 && open) {
             this.balance += amount;
         } else {
             throw new IllegalArgumentException();
@@ -19,11 +19,11 @@ public class BankAccount {
     }
 
     public void closeAccount() {
-        this.active = false;
+        this.open = false;
     }
 
-    public boolean getAccountStatus() {
-        return this.active;
+    public boolean getStatus() {
+        return this.open;
     }
 
     public double getBalance() {
