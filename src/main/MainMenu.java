@@ -19,8 +19,8 @@ public class MainMenu {
         System.out.println("Welcome to the 237 Bank App!");
         
         System.out.println("1. Make a deposit");
-        System.out.println("2. Close an existing account");
-        System.out.println("3. Exit the app");
+        System.out.println("6. Close an existing account");
+        System.out.println("8. Exit the app");
 
     }
 
@@ -37,7 +37,7 @@ public class MainMenu {
         switch (selection) {
             case 1:
                 performDeposit();
-            case 2:
+            case 6:
                 closeAccount();
         }
     }
