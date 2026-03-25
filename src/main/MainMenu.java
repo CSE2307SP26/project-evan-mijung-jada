@@ -15,11 +15,11 @@ public class MainMenu {
 
     private static final int MAX_SELECTION = 8;
 
-    private BankAccount userAccount;
+    private Bank bank;
     private Scanner keyboardInput;
 
     public MainMenu() {
-        this.userAccount = new BankAccount();
+        this.bank = new Bank();
         this.keyboardInput = new Scanner(System.in);
     }
 
@@ -44,6 +44,23 @@ public class MainMenu {
         return selection;
     }
 
+    public int getAccountSelection() {
+        int max = bank.getNumberOfAccounts();
+
+        System.out.println("Select an account:");
+        for (int i = 0; i < max; i++) {
+            System.out.println((i + 1) + ". Account " + (i + 1));
+        }
+
+        int selection = -1;
+        while (selection < 1 || selection > max) {
+            System.out.print("Choose account number: ");
+            selection = keyboardInput.nextInt();
+        }
+
+        return selection - 1;
+    }
+
     public void processInput(int selection) {
         switch (selection) {
             case DEPOSIT_SELECTION:
@@ -52,12 +69,14 @@ public class MainMenu {
             case VIEW_HISTORY_SELECTION:
                 viewTransactionHistory();
                 break;
+            case CREATE_ACCOUNT_SELECTION:
+                createAdditionalAccount();
+                break;
             case CLOSE_ACCOUNT_SELECTION:
                 closeAccount();
                 break;
             case WITHDRAW_SELECTION:
             case CHECK_BALANCE_SELECTION:
-            case CREATE_ACCOUNT_SELECTION:
             case TRANSFER_SELECTION:
                 System.out.println("This feature is not implemented yet.");
                 break;
@@ -71,21 +90,38 @@ public class MainMenu {
     }
 
     public void performDeposit() {
+        int accountIndex = getAccountSelection();
+        BankAccount selectedAccount = bank.getAccount(accountIndex);
+
         double depositAmount = -1;
         while (depositAmount < 0) {
             System.out.print("How much would you like to deposit: ");
             depositAmount = keyboardInput.nextDouble();
         }
-        userAccount.deposit(depositAmount);
+
+        selectedAccount.deposit(depositAmount);
+        System.out.println("Deposit complete.");
     }
 
     public void viewTransactionHistory() {
+        int accountIndex = getAccountSelection();
+        BankAccount selectedAccount = bank.getAccount(accountIndex);
+
         System.out.println("\nTransaction History:");
-        System.out.println(userAccount.getTransactionHistoryText());
+        System.out.println(selectedAccount.getTransactionHistoryText());
+    }
+
+    public void createAdditionalAccount() {
+        bank.createAdditionalAccount();
+        System.out.println("New account created successfully.");
+        System.out.println("Total accounts: " + bank.getNumberOfAccounts());
     }
 
     public void closeAccount() {
-        userAccount.closeAccount();
+        int accountIndex = getAccountSelection();
+        BankAccount selectedAccount = bank.getAccount(accountIndex);
+
+        selectedAccount.closeAccount();
         System.out.println("Account closed.");
     }
 
