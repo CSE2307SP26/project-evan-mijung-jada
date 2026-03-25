@@ -1,0 +1,43 @@
+package main;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Bank {
+
+    private List<BankAccount> accounts;
+
+    public Bank() {
+        this.accounts = new ArrayList<>();
+        this.accounts.add(new BankAccount()); // start with one default account
+    }
+
+    public void createAdditionalAccount() {
+        accounts.add(new BankAccount());
+    }
+
+    public int getNumberOfAccounts() {
+        return accounts.size();
+    }
+
+    public BankAccount getAccount(int index) {
+        if (index < 0 || index >= accounts.size()) {
+            throw new IllegalArgumentException("Invalid account index.");
+        }
+        return accounts.get(index);
+    }
+
+    public String getAllAccountsSummary() {
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i < accounts.size(); i++) {
+            result.append("Account ")
+                  .append(i + 1)
+                  .append(": Balance = $")
+                  .append(String.format("%.2f", accounts.get(i).getBalance()))
+                  .append("\n");
+        }
+
+        return result.toString();
+    }
+}
