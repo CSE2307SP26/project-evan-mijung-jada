@@ -34,9 +34,7 @@
 
 ## Is there anything that you implemented but doesn't currently work?
 
-The check account balance feature is still in progress and is not fully implemented yet.
-
-Some menu options for features planned for the next iteration may display a placeholder message indicating that the feature is not implemented yet.
+There are some edge cases that are not fully handled yet. For example, the program does not currently handle invalid input formats gracefully, such as when a user enters text instead of a number.
 
 ## What commands are needed to compile and run your code from the command line?
 
