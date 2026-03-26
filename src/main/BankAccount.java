@@ -26,6 +26,24 @@ public class BankAccount {
         }
     }
 
+    public boolean withdraw(double amount) {
+        if (amount <= 0 || !open) {
+            throw new IllegalArgumentException("Invalid withdrawal amount");
+        }
+
+        if (amount > balance) {
+            throw new IllegalArgumentException("Insufficient funds");
+        }
+
+        this.balance -= amount;
+
+        transactionHistory.add(
+            String.format("Withdrew $%.2f | New balance: $%.2f", amount, balance)
+        );
+
+        return true;
+    }
+
     public void closeAccount() {
         this.open = false;
     }
@@ -59,20 +77,18 @@ public class BankAccount {
     }
 
     public void transferMoney(BankAccount otherAccount, double amount) {
-        if(amount <= this.balance && this.open) {
+        if (amount <= this.balance && this.open) {
             this.balance -= amount;
             otherAccount.setBalance(otherAccount.getBalance() + amount);
             this.transactionHistory.add(
-                String.format("Transferred $%.2f | New balance: $%.2f", 
-                amount, balance)
+                String.format("Transferred $%.2f | New balance: $%.2f", amount, balance)
             );
-            otherAccount.transactionHistory.add(
+            otherAccount.getTransactionHistory().add(
                 String.format("$%.2f transferred to this account | New balance: $%.2f",
                     amount, otherAccount.getBalance())
             );
         } else {
             throw new IllegalArgumentException("Insufficient Funds");
         }
-        
     }
 }
