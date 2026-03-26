@@ -83,4 +83,50 @@ public class BankAccountTest {
         assertEquals(20, testAccount1.getBalance(), 0.01);
         assertEquals(55, testAccount2.getBalance(), 0.01);
     }
+
+    @Test
+    public void testWithdrawReducesBalance() {
+        BankAccount testAccount = new BankAccount();
+        testAccount.deposit(100);
+
+        assertTrue(testAccount.withdraw(40));
+        assertEquals(60, testAccount.getBalance(), 0.01);
+    }
+
+    @Test
+    public void testWithdrawInvalidAmount() {
+        BankAccount testAccount = new BankAccount();
+        testAccount.deposit(100);
+
+        try {
+            testAccount.withdraw(0);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // test passes
+        }
+    }
+
+    @Test
+    public void testWithdrawInsufficientFunds() {
+        BankAccount testAccount = new BankAccount();
+
+        try {
+            testAccount.withdraw(10);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // test passes
+        }
+    }
+
+    @Test
+    public void testCheckBalance() {
+        BankAccount testAccount = new BankAccount();
+        assertEquals(0, testAccount.getBalance(), 0.01);
+
+        testAccount.deposit(75.25);
+        assertEquals(75.25, testAccount.getBalance(), 0.01);
+
+        testAccount.withdraw(25.25);
+        assertEquals(50, testAccount.getBalance(), 0.01);
+    }
 }
