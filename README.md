@@ -29,8 +29,12 @@
 
 ## What user stories do you intend to complete next iteration?
 
-* A bank administrator should be able to collect fees from existing accounts when necessary.
-* A bank administrator should be able to add an interest payment to an existing account when necessary.
+* A bank administrator should be able to collect fees from existing accounts when necessary. (Mijung)
+* A bank administrator should be able to add an interest payment to an existing account when necessary. (Mijung)
+* A bank customer should be able to rename an existing account. (Evan)
+* A bank customer should be able to view all their accounts. (Evan)
+* A bank customer should be able to see if an account is open or closed. (Jada)
+* A bank customer should be able to reopen a closed account. (Jada)
 
 ## Is there anything that you implemented but doesn't currently work?
 
