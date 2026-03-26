@@ -1,1 +1,19 @@
-.
+TEMP NOTES - ITERATION 1
+
+Completed Features:
+- Deposit functionality
+- Withdraw functionality
+- Transfer between accounts
+
+Bugs / Issues:
+- Need to handle invalid inputs more clearly
+- Improve transaction history formatting
+
+Next Iteration Goals that I need to usse:
+- Add unit tests
+- Improve error messages
+- Add account validation (closed/open accounts)
+
+Team Notes:
+- Make sure all branches are merged into development
+- Clean up README before submission
