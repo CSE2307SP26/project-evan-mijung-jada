@@ -35,6 +35,7 @@
 * A bank customer should be able to view all their accounts. (Evan)
 * A bank customer should be able to see if an account is open or closed. (Jada)
 * A bank customer should be able to reopen a closed account. (Jada)
+* Try cache in main menu to handle negative deposit and avoid getting program to crash when user puts text for number input.
 
 ## Is there anything that you implemented but doesn't currently work?
 
