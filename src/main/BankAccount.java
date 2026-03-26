@@ -25,10 +25,28 @@ public class BankAccount {
             throw new IllegalArgumentException();
         }
     }
+    public boolean withdraw(double amount) {
+    if (amount <= 0 || !open) {
+        throw new IllegalArgumentException("Invalid withdrawal amount");
+    }
+
+    if (amount > balance) {
+        throw new IllegalArgumentException("Insufficient funds");
+    }
+
+    this.balance -= amount;
+
+    transactionHistory.add(
+        String.format("Withdrew $%.2f | New balance: $%.2f", amount, balance)
+    );
+
+    return  true;
+
+    }
 
     public void closeAccount() {
         this.open = false;
-    }
+    } 
 
     public boolean getStatus() {
         return this.open;
