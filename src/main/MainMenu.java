@@ -32,7 +32,17 @@ public class MainMenu {
         System.out.println("5. Create an additional account");
         System.out.println("6. Close an existing account");
         System.out.println("7. Transfer money from one account to another");
-        System.out.println("8. Exit the app");
+
+        System.out.println("8. Mijung");
+        System.out.println("9. Mijung");
+
+        System.out.println("10. Evan");
+        System.out.println("11. Evan");
+
+        System.out.println("12. Jada");
+        System.out.println("13. Jada");
+
+        System.out.println("14. Exit the app");
     }
 
     public int getUserSelection(int max) {
