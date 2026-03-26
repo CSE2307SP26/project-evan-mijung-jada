@@ -11,9 +11,9 @@ public class MainMenu {
     private static final int CREATE_ACCOUNT_SELECTION = 5;
     private static final int CLOSE_ACCOUNT_SELECTION = 6;
     private static final int TRANSFER_SELECTION = 7;
-    private static final int EXIT_SELECTION = 8;
+    private static final int EXIT_SELECTION = 14;
 
-    private static final int MAX_SELECTION = 8;
+    private static final int MAX_SELECTION = 14;
 
     private Bank bank;
     private Scanner keyboardInput;
@@ -86,13 +86,13 @@ public class MainMenu {
                 closeAccount();
                 break;
             case WITHDRAW_SELECTION:
-            performWithdraw();
-            break;
+                performWithdraw();
+                break;
             case CHECK_BALANCE_SELECTION:
-            checkBalance();
-            break;
+                checkBalance();
+                break;
             case TRANSFER_SELECTION:
-            performTransfer();
+                performTransfer();
                 break;
             case EXIT_SELECTION:
                 System.out.println("Exiting app...");
@@ -113,35 +113,42 @@ public class MainMenu {
             depositAmount = keyboardInput.nextDouble();
         }
 
-        selectedAccount.deposit(depositAmount);
-        System.out.println("Deposit complete.");
+        try {
+            selectedAccount.deposit(depositAmount);
+            System.out.println("Deposit complete.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Deposit Failed.");
+        }
+        
     }
+
     public void performWithdraw() {
-    int accountIndex = getAccountSelection();
-    BankAccount selectedAccount = bank.getAccount(accountIndex);
+        int accountIndex = getAccountSelection();
+        BankAccount selectedAccount = bank.getAccount(accountIndex);
 
-    double withdrawAmount = -1;
-    while (withdrawAmount < 0) {
-        System.out.println("How much would you like to withdraw? Your current balance is "
-                + selectedAccount.getBalance());
-        System.out.print("Enter an amount: ");
-        withdrawAmount = keyboardInput.nextDouble();
+        double withdrawAmount = -1;
+        while (withdrawAmount < 0) {
+            System.out.println("How much would you like to withdraw? Your current balance is "
+                    + selectedAccount.getBalance());
+            System.out.print("Enter an amount: ");
+            withdrawAmount = keyboardInput.nextDouble();
+        }
+
+        try {
+            selectedAccount.withdraw(withdrawAmount);
+            System.out.println("Withdrawal complete.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Withdrawal failed: " + e.getMessage());
+        }
     }
 
-    try {
-        selectedAccount.withdraw(withdrawAmount);
-        System.out.println("Withdrawal complete.");
-    } catch (IllegalArgumentException e) {
-        System.out.println("Withdrawal failed: " + e.getMessage());
+    public void checkBalance() {
+        int accountIndex = getAccountSelection();
+        BankAccount selectedAccount = bank.getAccount(accountIndex);
+
+        System.out.println("Current balance: $" + selectedAccount.getBalance());
     }
-}
 
-public void checkBalance() {
-    int accountIndex = getAccountSelection();
-    BankAccount selectedAccount = bank.getAccount(accountIndex);
-
-    System.out.println("Current balance: $" + selectedAccount.getBalance());
-}
     public void viewTransactionHistory() {
         int accountIndex = getAccountSelection();
         BankAccount selectedAccount = bank.getAccount(accountIndex);
@@ -181,8 +188,13 @@ public void checkBalance() {
             transferAmount = keyboardInput.nextDouble();
         }
         
-        selectedAccount.transferMoney(accountToTransferTo, transferAmount);
-        System.out.print("Transfer complete");
+        try {
+            selectedAccount.transferMoney(accountToTransferTo, transferAmount);
+            System.out.print("Transfer complete\n");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Transfer failed: " + e.getMessage());
+        }
+        
     }
 
     public void run() {
