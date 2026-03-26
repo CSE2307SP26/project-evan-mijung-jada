@@ -66,6 +66,12 @@ public class MainMenu {
             case DEPOSIT_SELECTION:
                 performDeposit();
                 break;
+            case WITHDRAW_SELECTION:
+                performWithdraw();
+                break;
+            case CHECK_BALANCE_SELECTION:
+                checkBalance();
+                break;
             case VIEW_HISTORY_SELECTION:
                 viewTransactionHistory();
                 break;
@@ -75,8 +81,6 @@ public class MainMenu {
             case CLOSE_ACCOUNT_SELECTION:
                 closeAccount();
                 break;
-            case WITHDRAW_SELECTION:
-            case CHECK_BALANCE_SELECTION:
             case TRANSFER_SELECTION:
                 performTransfer();
                 break;
@@ -99,8 +103,39 @@ public class MainMenu {
             depositAmount = keyboardInput.nextDouble();
         }
 
-        selectedAccount.deposit(depositAmount);
-        System.out.println("Deposit complete.");
+        try {
+            selectedAccount.deposit(depositAmount);
+            System.out.println("Deposit complete.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Deposit failed.");
+        }
+    }
+
+    public void performWithdraw() {
+        int accountIndex = getAccountSelection();
+        BankAccount selectedAccount = bank.getAccount(accountIndex);
+
+        double withdrawAmount = -1;
+        while (withdrawAmount < 0) {
+            System.out.println("How much would you like to withdraw? Your current balance is "
+                    + selectedAccount.getBalance());
+            System.out.print("Enter an amount: ");
+            withdrawAmount = keyboardInput.nextDouble();
+        }
+
+        try {
+            selectedAccount.withdraw(withdrawAmount);
+            System.out.println("Withdrawal complete.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Withdrawal failed: " + e.getMessage());
+        }
+    }
+
+    public void checkBalance() {
+        int accountIndex = getAccountSelection();
+        BankAccount selectedAccount = bank.getAccount(accountIndex);
+
+        System.out.println("Current balance: $" + selectedAccount.getBalance());
     }
 
     public void viewTransactionHistory() {
@@ -134,16 +169,19 @@ public class MainMenu {
         BankAccount accountToTransferTo = bank.getAccount(accountToTransferToIndex);
 
         double transferAmount = -1;
-        while(transferAmount < 0) {
-            System.out.println("How much would you like to transfer? Your current balance is " + 
-                selectedAccount.getBalance());
-
+        while (transferAmount < 0) {
+            System.out.println("How much would you like to transfer? Your current balance is "
+                    + selectedAccount.getBalance());
             System.out.print("Enter an amount: ");
             transferAmount = keyboardInput.nextDouble();
         }
-        
-        selectedAccount.transferMoney(accountToTransferTo, transferAmount);
-        System.out.print("Transfer complete");
+
+        try {
+            selectedAccount.transferMoney(accountToTransferTo, transferAmount);
+            System.out.println("Transfer complete");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Transfer failed: " + e.getMessage());
+        }
     }
 
     public void run() {
