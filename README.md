@@ -21,6 +21,7 @@
 ## What user stories were completed this iteration?
 
 * A bank customer should be able to withdraw from an account.
+* A bank customer should be able to check their account balance.
 * A bank customer should be able to view their transaction history for an account. 
 * A bank customer should be able to create an additional account with the bank. 
 * A bank customer should be able to close an existing account. 
@@ -28,7 +29,6 @@
 
 ## What user stories do you intend to complete next iteration?
 
-* A bank customer should be able to check their account balance.
 * A bank administrator should be able to collect fees from existing accounts when necessary.
 * A bank administrator should be able to add an interest payment to an existing account when necessary.
 
