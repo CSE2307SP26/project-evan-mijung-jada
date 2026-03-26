@@ -78,7 +78,7 @@ public class MainMenu {
             case WITHDRAW_SELECTION:
             case CHECK_BALANCE_SELECTION:
             case TRANSFER_SELECTION:
-                System.out.println("This feature is not implemented yet.");
+                performTransfer();
                 break;
             case EXIT_SELECTION:
                 System.out.println("Exiting app...");
@@ -123,6 +123,27 @@ public class MainMenu {
 
         selectedAccount.closeAccount();
         System.out.println("Account closed.");
+    }
+
+    public void performTransfer() {
+        int accountIndex = getAccountSelection();
+        BankAccount selectedAccount = bank.getAccount(accountIndex);
+
+        System.out.println("Which account would you like to transfer money to?");
+        int accountToTransferToIndex = getAccountSelection();
+        BankAccount accountToTransferTo = bank.getAccount(accountToTransferToIndex);
+
+        double transferAmount = -1;
+        while(transferAmount < 0) {
+            System.out.println("How much would you like to transfer? Your current balance is " + 
+                selectedAccount.getBalance());
+
+            System.out.print("Enter an amount: ");
+            transferAmount = keyboardInput.nextDouble();
+        }
+        
+        selectedAccount.transferMoney(accountToTransferTo, transferAmount);
+        System.out.print("Transfer complete");
     }
 
     public void run() {

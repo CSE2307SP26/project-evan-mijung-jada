@@ -38,6 +38,10 @@ public class BankAccount {
         return this.balance;
     }
 
+    public void setBalance(double amount) {
+        this.balance = amount;
+    }
+
     public List<String> getTransactionHistory() {
         return this.transactionHistory;
     }
@@ -52,5 +56,23 @@ public class BankAccount {
             historyText.append(transaction).append("\n");
         }
         return historyText.toString();
+    }
+
+    public void transferMoney(BankAccount otherAccount, double amount) {
+        if(amount <= this.balance && this.open) {
+            this.balance -= amount;
+            otherAccount.setBalance(otherAccount.getBalance() + amount);
+            this.transactionHistory.add(
+                String.format("Transferred $%.2f | New balance: $%.2f", 
+                amount, balance)
+            );
+            otherAccount.transactionHistory.add(
+                String.format("$%.2f transferred to this account | New balance: $%.2f",
+                    amount, otherAccount.getBalance())
+            );
+        } else {
+            throw new IllegalArgumentException("Insufficient Funds");
+        }
+        
     }
 }

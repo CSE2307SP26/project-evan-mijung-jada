@@ -59,4 +59,28 @@ public class BankAccountTest {
         testAccount.closeAccount();
         assertFalse(testAccount.getStatus());
     }
+
+    @Test
+    public void testTransferMoneyEmptyAccounts() {
+        BankAccount testAccount1 = new BankAccount();
+        BankAccount testAccount2 = new BankAccount();
+        try {
+            testAccount1.transferMoney(testAccount2, 50);
+            fail();
+        } catch (IllegalArgumentException e) {
+            //test passes
+        }
+            
+    }
+    
+    @Test
+    public void testTransferMoney() {
+        BankAccount testAccount1 = new BankAccount();
+        BankAccount testAccount2 = new BankAccount();
+        testAccount1.deposit(50);
+        testAccount2.deposit(25);
+        testAccount1.transferMoney(testAccount2, 30);
+        assertEquals(20, testAccount1.getBalance(), 0.01);
+        assertEquals(55, testAccount2.getBalance(), 0.01);
+    }
 }
