@@ -59,6 +59,12 @@ public class BankAccountTest {
         testAccount.closeAccount();
         assertFalse(testAccount.getStatus());
     }
+    
+    @Test
+    public void testNewAccountStartsOpen() {
+        BankAccount testAccount = new BankAccount();
+        assertTrue(testAccount.getStatus());
+    }
 
     @Test
     public void testTransferMoneyEmptyAccounts() {
