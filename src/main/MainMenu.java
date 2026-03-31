@@ -11,6 +11,7 @@ public class MainMenu {
     private static final int CREATE_ACCOUNT_SELECTION = 5;
     private static final int CLOSE_ACCOUNT_SELECTION = 6;
     private static final int TRANSFER_SELECTION = 7;
+    private static final int RENAME_SELECTION = 10;
     private static final int EXIT_SELECTION = 14;
 
     private static final int MAX_SELECTION = 14;
@@ -36,7 +37,7 @@ public class MainMenu {
         System.out.println("8. Mijung");
         System.out.println("9. Mijung");
 
-        System.out.println("10. Evan");
+        System.out.println("10. Rename an existing account");
         System.out.println("11. Evan");
 
         System.out.println("12. Jada");
@@ -50,6 +51,7 @@ public class MainMenu {
         while (selection < 1 || selection > max) {
             System.out.print("Please make a selection: ");
             selection = keyboardInput.nextInt();
+            keyboardInput.nextLine();
         }
         return selection;
     }
@@ -59,13 +61,14 @@ public class MainMenu {
 
         System.out.println("Select an account:");
         for (int i = 0; i < max; i++) {
-            System.out.println((i + 1) + ". Account " + (i + 1));
+            System.out.println((i + 1) + ": " + bank.getAccount(i).getName());
         }
 
         int selection = -1;
         while (selection < 1 || selection > max) {
             System.out.print("Choose account number: ");
             selection = keyboardInput.nextInt();
+            keyboardInput.nextLine();
         }
 
         return selection - 1;
@@ -96,6 +99,9 @@ public class MainMenu {
                 break;
             case EXIT_SELECTION:
                 System.out.println("Exiting app...");
+                break;
+            case RENAME_SELECTION:
+                renameAccount();
                 break;
             default:
                 System.out.println("Invalid selection.");
@@ -195,6 +201,15 @@ public class MainMenu {
             System.out.println("Transfer failed: " + e.getMessage());
         }
         
+    }
+
+    public void renameAccount() {
+        int accountIndex = getAccountSelection();
+        BankAccount selectedAccount = bank.getAccount(accountIndex);
+
+        System.out.print("Enter your new account name: ");
+        String newName = keyboardInput.nextLine();
+        selectedAccount.rename(newName);
     }
 
     public void run() {

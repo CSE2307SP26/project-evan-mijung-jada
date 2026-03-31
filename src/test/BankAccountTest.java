@@ -13,14 +13,14 @@ public class BankAccountTest {
 
     @Test
     public void testDeposit() {
-        BankAccount testAccount = new BankAccount();
+        BankAccount testAccount = new BankAccount(null);
         testAccount.deposit(50);
         assertEquals(50, testAccount.getBalance(), 0.01);
     }
 
     @Test
     public void testInvalidDeposit() {
-        BankAccount testAccount = new BankAccount();
+        BankAccount testAccount = new BankAccount(null);
         try {
             testAccount.deposit(-50);
             fail();
@@ -31,13 +31,13 @@ public class BankAccountTest {
 
     @Test
     public void testTransactionHistoryStartsEmpty() {
-        BankAccount testAccount = new BankAccount();
+        BankAccount testAccount = new BankAccount(null);
         assertEquals("No transactions found.", testAccount.getTransactionHistoryText());
     }
 
     @Test
     public void testDepositAddsTransactionHistory() {
-        BankAccount testAccount = new BankAccount();
+        BankAccount testAccount = new BankAccount(null);
         testAccount.deposit(50);
 
         assertEquals(1, testAccount.getTransactionHistory().size());
@@ -46,7 +46,7 @@ public class BankAccountTest {
 
     @Test
     public void testMultipleDepositsAddMultipleTransactions() {
-        BankAccount testAccount = new BankAccount();
+        BankAccount testAccount = new BankAccount(null);
         testAccount.deposit(50);
         testAccount.deposit(25);
 
@@ -55,15 +55,15 @@ public class BankAccountTest {
 
     @Test
     public void testCloseExistingAccount() {
-        BankAccount testAccount = new BankAccount();
+        BankAccount testAccount = new BankAccount(null);
         testAccount.closeAccount();
         assertFalse(testAccount.getStatus());
     }
 
     @Test
     public void testTransferMoneyEmptyAccounts() {
-        BankAccount testAccount1 = new BankAccount();
-        BankAccount testAccount2 = new BankAccount();
+        BankAccount testAccount1 = new BankAccount(null);
+        BankAccount testAccount2 = new BankAccount(null);
         try {
             testAccount1.transferMoney(testAccount2, 50);
             fail();
@@ -75,8 +75,8 @@ public class BankAccountTest {
     
     @Test
     public void testTransferMoney() {
-        BankAccount testAccount1 = new BankAccount();
-        BankAccount testAccount2 = new BankAccount();
+        BankAccount testAccount1 = new BankAccount(null);
+        BankAccount testAccount2 = new BankAccount(null);
         testAccount1.deposit(50);
         testAccount2.deposit(25);
         testAccount1.transferMoney(testAccount2, 30);
@@ -86,7 +86,7 @@ public class BankAccountTest {
 
     @Test
     public void testWithdrawReducesBalance() {
-        BankAccount testAccount = new BankAccount();
+        BankAccount testAccount = new BankAccount(null);
         testAccount.deposit(100);
 
         assertTrue(testAccount.withdraw(40));
@@ -95,7 +95,7 @@ public class BankAccountTest {
 
     @Test
     public void testWithdrawInvalidAmount() {
-        BankAccount testAccount = new BankAccount();
+        BankAccount testAccount = new BankAccount(null);
         testAccount.deposit(100);
 
         try {
@@ -108,7 +108,7 @@ public class BankAccountTest {
 
     @Test
     public void testWithdrawInsufficientFunds() {
-        BankAccount testAccount = new BankAccount();
+        BankAccount testAccount = new BankAccount(null);
 
         try {
             testAccount.withdraw(10);
@@ -120,7 +120,7 @@ public class BankAccountTest {
 
     @Test
     public void testCheckBalance() {
-        BankAccount testAccount = new BankAccount();
+        BankAccount testAccount = new BankAccount(null);
         assertEquals(0, testAccount.getBalance(), 0.01);
 
         testAccount.deposit(75.25);
@@ -128,5 +128,12 @@ public class BankAccountTest {
 
         testAccount.withdraw(25.25);
         assertEquals(50, testAccount.getBalance(), 0.01);
+    }
+
+    @Test
+    public void testRenameAccount() {
+        BankAccount testAccount = new BankAccount(null);
+        testAccount.rename("my first account");
+        assertEquals("my first account", testAccount.getName());
     }
 }
