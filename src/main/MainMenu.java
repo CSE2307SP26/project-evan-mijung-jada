@@ -12,6 +12,7 @@ public class MainMenu {
     private static final int CLOSE_ACCOUNT_SELECTION = 6;
     private static final int TRANSFER_SELECTION = 7;
     private static final int RENAME_SELECTION = 10;
+    private static final int VIEW_ACCOUNTS_SELECTION = 11;
     private static final int EXIT_SELECTION = 14;
 
     private static final int MAX_SELECTION = 14;
@@ -38,8 +39,8 @@ public class MainMenu {
         System.out.println("9. Mijung");
 
         System.out.println("10. Rename an existing account");
-        System.out.println("11. Evan");
-
+        System.out.println("11. View all accounts");
+        
         System.out.println("12. Jada");
         System.out.println("13. Jada");
 
@@ -102,6 +103,9 @@ public class MainMenu {
                 break;
             case RENAME_SELECTION:
                 renameAccount();
+                break;
+            case VIEW_ACCOUNTS_SELECTION:
+                viewAllAccounts();
                 break;
             default:
                 System.out.println("Invalid selection.");
@@ -220,6 +224,11 @@ public class MainMenu {
             processInput(selection);
             System.out.println();
         }
+    }
+
+    public void viewAllAccounts() {
+        System.out.println("\nAll Accounts Summary:");
+        System.out.println(bank.getAllAccountsSummary());
     }
 
     public static void main(String[] args) {
