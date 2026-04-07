@@ -40,7 +40,7 @@ public class BankAccount {
         String.format("Withdrew $%.2f | New balance: $%.2f", amount, balance)
     );
 
-    return  true;
+    return true;
 
     }
 
@@ -50,6 +50,11 @@ public class BankAccount {
 
     public void reopenAccount() {
     this.open = true;
+    
+    }
+
+    public boolean isOpen() {
+    return this.open;
     
     }
 
