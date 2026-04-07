@@ -48,6 +48,11 @@ public class BankAccount {
         this.open = false;
     } 
 
+    public void reopenAccount() {
+    this.open = true;
+    
+    }
+
     public boolean getStatus() {
         return this.open;
     }
