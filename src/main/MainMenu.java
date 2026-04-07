@@ -11,10 +11,14 @@ public class MainMenu {
     private static final int CREATE_ACCOUNT_SELECTION = 5;
     private static final int CLOSE_ACCOUNT_SELECTION = 6;
     private static final int TRANSFER_SELECTION = 7;
-    private static final int EXIT_SELECTION = 8;
+    //add app selections
+    private static final int CHECK_ACCOUNT_STATUS_SELECTION = 12;
+    private static final int REOPEN_ACCOUNT_SELECTION = 13;
 
-    private static final int MAX_SELECTION = 8;
+    private static final int EXIT_SELECTION = 14;
 
+    private static final int MAX_SELECTION = 14;
+   
     private Bank bank;
     private Scanner keyboardInput;
 
@@ -39,8 +43,8 @@ public class MainMenu {
         System.out.println("10. Evan");
         System.out.println("11. Evan");
 
-        System.out.println("12. Jada");
-        System.out.println("13. Jada");
+        System.out.println("12. Check whether an account is open or closed");
+        System.out.println("13. Reopen a closed account");
 
         System.out.println("14. Exit the app");
     }
@@ -86,18 +90,29 @@ public class MainMenu {
                 closeAccount();
                 break;
             case WITHDRAW_SELECTION:
-            performWithdraw();
+                performWithdraw();
             break;
-            case CHECK_BALANCE_SELECTION:
-            checkBalance();
+                
+                case CHECK_BALANCE_SELECTION:
+                checkBalance();
             break;
+                
             case TRANSFER_SELECTION:
-            performTransfer();
+                performTransfer();
                 break;
+                
+            case CHECK_ACCOUNT_STATUS_SELECTION:
+                checkAccountStatus();
+            break;
+                
+            case REOPEN_ACCOUNT_SELECTION:
+                reopenClosedAccount();
+            break;    
+                
             case EXIT_SELECTION:
                 System.out.println("Exiting app...");
                 break;
-            default:
+             default:
                 System.out.println("Invalid selection.");
                 break;
         }
