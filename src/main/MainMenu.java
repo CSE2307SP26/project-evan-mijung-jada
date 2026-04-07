@@ -92,23 +92,18 @@ public class MainMenu {
             case WITHDRAW_SELECTION:
                 performWithdraw();
             break;
-                
                 case CHECK_BALANCE_SELECTION:
                 checkBalance();
             break;
-                
             case TRANSFER_SELECTION:
                 performTransfer();
                 break;
-                
             case CHECK_ACCOUNT_STATUS_SELECTION:
                 checkAccountStatus();
             break;
-                
             case REOPEN_ACCOUNT_SELECTION:
                 reopenClosedAccount();
             break;    
-                
             case EXIT_SELECTION:
                 System.out.println("Exiting app...");
                 break;
