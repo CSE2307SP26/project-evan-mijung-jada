@@ -38,7 +38,7 @@ public class MainMenu {
         System.out.println("9. Mijung");
         System.out.println("10. Evan");
         System.out.println("11. Evan");
-        System.out.println("12. Check if account is open or closed");
+        System.out.println("12. Check account status (open or closed)");
         System.out.println("13. Reopen a closed account");
         System.out.println("14. Exit the app");
     }
