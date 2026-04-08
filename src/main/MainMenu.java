@@ -11,6 +11,8 @@ public class MainMenu {
     private static final int CREATE_ACCOUNT_SELECTION = 5;
     private static final int CLOSE_ACCOUNT_SELECTION = 6;
     private static final int TRANSFER_SELECTION = 7;
+    private static final int CHECK_ACCOUNT_STATUS_SELECTION = 12;
+    private static final int REOPEN_ACCOUNT_SELECTION = 13;
     private static final int EXIT_SELECTION = 14;
 
     private static final int MAX_SELECTION = 14;
@@ -32,16 +34,12 @@ public class MainMenu {
         System.out.println("5. Create an additional account");
         System.out.println("6. Close an existing account");
         System.out.println("7. Transfer money from one account to another");
-
         System.out.println("8. Mijung");
         System.out.println("9. Mijung");
-
         System.out.println("10. Evan");
         System.out.println("11. Evan");
-
-        System.out.println("12. Jada");
-        System.out.println("13. Jada");
-
+        System.out.println("12. Check if account is open or closed");
+        System.out.println("13. Reopen a closed account");
         System.out.println("14. Exit the app");
     }
 
@@ -76,6 +74,12 @@ public class MainMenu {
             case DEPOSIT_SELECTION:
                 performDeposit();
                 break;
+            case WITHDRAW_SELECTION:
+                performWithdraw();
+                break;
+            case CHECK_BALANCE_SELECTION:
+                checkBalance();
+                break;
             case VIEW_HISTORY_SELECTION:
                 viewTransactionHistory();
                 break;
@@ -85,14 +89,14 @@ public class MainMenu {
             case CLOSE_ACCOUNT_SELECTION:
                 closeAccount();
                 break;
-            case WITHDRAW_SELECTION:
-                performWithdraw();
-                break;
-            case CHECK_BALANCE_SELECTION:
-                checkBalance();
-                break;
             case TRANSFER_SELECTION:
                 performTransfer();
+                break;
+            case CHECK_ACCOUNT_STATUS_SELECTION:
+                checkAccountStatus();
+                break;
+            case REOPEN_ACCOUNT_SELECTION:
+                reopenAccount();
                 break;
             case EXIT_SELECTION:
                 System.out.println("Exiting app...");
@@ -113,13 +117,8 @@ public class MainMenu {
             depositAmount = keyboardInput.nextDouble();
         }
 
-        try {
-            selectedAccount.deposit(depositAmount);
-            System.out.println("Deposit complete.");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Deposit Failed.");
-        }
-        
+        selectedAccount.deposit(depositAmount);
+        System.out.println("Deposit complete.");
     }
 
     public void performWithdraw() {
@@ -180,21 +179,38 @@ public class MainMenu {
         BankAccount accountToTransferTo = bank.getAccount(accountToTransferToIndex);
 
         double transferAmount = -1;
-        while(transferAmount < 0) {
-            System.out.println("How much would you like to transfer? Your current balance is " + 
-                selectedAccount.getBalance());
-
+        while (transferAmount < 0) {
+            System.out.println("How much would you like to transfer? Your current balance is "
+                    + selectedAccount.getBalance());
             System.out.print("Enter an amount: ");
             transferAmount = keyboardInput.nextDouble();
         }
-        
-        try {
-            selectedAccount.transferMoney(accountToTransferTo, transferAmount);
-            System.out.print("Transfer complete\n");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Transfer failed: " + e.getMessage());
+
+        selectedAccount.transferMoney(accountToTransferTo, transferAmount);
+        System.out.println("Transfer complete");
+    }
+
+    public void checkAccountStatus() {
+        int accountIndex = getAccountSelection();
+        BankAccount selectedAccount = bank.getAccount(accountIndex);
+
+        boolean isOpen = selectedAccount.getStatus();
+        System.out.println("Account status: " + (isOpen ? "Open" : "Closed"));
+    }
+
+    public void reopenAccount() {
+        int accountIndex = getAccountSelection();
+        BankAccount selectedAccount = bank.getAccount(accountIndex);
+
+        boolean isOpen = selectedAccount.getStatus();
+
+        if (isOpen) {
+            System.out.println("Account is already open.");
+            return;
         }
-        
+
+        selectedAccount.reopenAccount();
+        System.out.println("Account reopened successfully.");
     }
 
     public void run() {
