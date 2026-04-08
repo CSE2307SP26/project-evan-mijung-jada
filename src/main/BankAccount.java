@@ -49,12 +49,12 @@ public class BankAccount {
     } 
 
     public void reopenAccount() {
-    this.open = true;
+        this.open = true;
     
     }
 
     public boolean isOpen() {
-    return this.open;
+        return this.open;
     
     }
 
