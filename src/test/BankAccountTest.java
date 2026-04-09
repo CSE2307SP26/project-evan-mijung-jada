@@ -141,6 +141,46 @@ public class BankAccountTest {
         testAccount.rename("my first account");
         assertEquals("my first account", testAccount.getName());
     }
+
+    @Test
+    public void testInterestPaymentIncreasesBalance() {
+        BankAccount testAccount = new BankAccount(null);
+        testAccount.addInterestPayment(12.50);
+        assertEquals(12.50, testAccount.getBalance(), 0.01);
+    }
+
+    @Test
+    public void testInterestPaymentAddsTransactionHistory() {
+        BankAccount testAccount = new BankAccount(null);
+        testAccount.addInterestPayment(5);
+
+        assertEquals(1, testAccount.getTransactionHistory().size());
+        assertTrue(testAccount.getTransactionHistory().get(0).contains("Interest payment $5.00"));
+    }
+
+    @Test
+    public void testInterestPaymentInvalidAmount() {
+        BankAccount testAccount = new BankAccount(null);
+        try {
+            testAccount.addInterestPayment(0);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // test passes
+        }
+    }
+
+    @Test
+    public void testInterestPaymentClosedAccount() {
+        BankAccount testAccount = new BankAccount(null);
+        testAccount.closeAccount();
+
+        try {
+            testAccount.addInterestPayment(5);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // test passes
+        }
+    }
     @Test
     public void testWithdrawValidAmount() {
         BankAccount account = new BankAccount();
