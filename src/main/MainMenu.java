@@ -11,6 +11,8 @@ public class MainMenu {
     private static final int CREATE_ACCOUNT_SELECTION = 5;
     private static final int CLOSE_ACCOUNT_SELECTION = 6;
     private static final int TRANSFER_SELECTION = 7;
+    private static final int RENAME_SELECTION = 10;
+    private static final int VIEW_ACCOUNTS_SELECTION = 11;
     private static final int CHECK_ACCOUNT_STATUS_SELECTION = 12;
     private static final int REOPEN_ACCOUNT_SELECTION = 13;
     private static final int EXIT_SELECTION = 14;
@@ -36,6 +38,13 @@ public class MainMenu {
         System.out.println("7. Transfer money from one account to another");
         System.out.println("8. Mijung");
         System.out.println("9. Mijung");
+
+        System.out.println("10. Rename an existing account");
+        System.out.println("11. View all accounts");
+        
+        System.out.println("12. Jada");
+        System.out.println("13. Jada");
+
         System.out.println("10. Evan");
         System.out.println("11. Evan");
         System.out.println("12. Check account status (open or closed)");
@@ -48,6 +57,7 @@ public class MainMenu {
         while (selection < 1 || selection > max) {
             System.out.print("Please make a selection: ");
             selection = keyboardInput.nextInt();
+            keyboardInput.nextLine();
         }
         return selection;
     }
@@ -57,13 +67,14 @@ public class MainMenu {
 
         System.out.println("Select an account:");
         for (int i = 0; i < max; i++) {
-            System.out.println((i + 1) + ". Account " + (i + 1));
+            System.out.println((i + 1) + ": " + bank.getAccount(i).getName());
         }
 
         int selection = -1;
         while (selection < 1 || selection > max) {
             System.out.print("Choose account number: ");
             selection = keyboardInput.nextInt();
+            keyboardInput.nextLine();
         }
 
         return selection - 1;
@@ -100,6 +111,12 @@ public class MainMenu {
                 break;
             case EXIT_SELECTION:
                 System.out.println("Exiting app...");
+                break;
+            case RENAME_SELECTION:
+                renameAccount();
+                break;
+            case VIEW_ACCOUNTS_SELECTION:
+                viewAllAccounts();
                 break;
             default:
                 System.out.println("Invalid selection.");
@@ -213,6 +230,15 @@ public class MainMenu {
         System.out.println("Account reopened successfully.");
     }
 
+    public void renameAccount() {
+        int accountIndex = getAccountSelection();
+        BankAccount selectedAccount = bank.getAccount(accountIndex);
+
+        System.out.print("Enter your new account name: ");
+        String newName = keyboardInput.nextLine();
+        selectedAccount.rename(newName);
+    }
+
     public void run() {
         int selection = -1;
         while (selection != EXIT_SELECTION) {
@@ -221,6 +247,11 @@ public class MainMenu {
             processInput(selection);
             System.out.println();
         }
+    }
+
+    public void viewAllAccounts() {
+        System.out.println("\nAll Accounts Summary:");
+        System.out.println(bank.getAllAccountsSummary());
     }
 
     public static void main(String[] args) {

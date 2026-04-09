@@ -5,14 +5,16 @@ import java.util.List;
 
 public class BankAccount {
 
+    private String name;
     private double balance;
     private List<String> transactionHistory;
     private boolean open;
 
-    public BankAccount() {
+    public BankAccount(String name) {
         this.balance = 0;
         this.open = true;
         this.transactionHistory = new ArrayList<>();
+        this.name = name;
     }
 
     public void deposit(double amount) {
@@ -99,5 +101,13 @@ public class BankAccount {
         } else {
             throw new IllegalArgumentException("Insufficient Funds");
         }
+    }
+
+    public void rename(String newName) {
+        this.name = newName;
+    }
+
+    public String getName() {
+        return this.name;
     }
 }

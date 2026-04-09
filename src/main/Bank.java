@@ -9,11 +9,11 @@ public class Bank {
 
     public Bank() {
         this.accounts = new ArrayList<>();
-        this.accounts.add(new BankAccount()); // start with one default account
+        this.accounts.add(new BankAccount("Account " + (accounts.size() + 1))); // start with one default account
     }
 
     public void createAdditionalAccount() {
-        accounts.add(new BankAccount());
+        accounts.add(new BankAccount("Account " + (accounts.size() + 1)));
     }
 
     public int getNumberOfAccounts() {
@@ -30,12 +30,13 @@ public class Bank {
     public String getAllAccountsSummary() {
         StringBuilder result = new StringBuilder();
 
-        for (int i = 0; i < accounts.size(); i++) {
-            result.append("Account ")
-                  .append(i + 1)
-                  .append(": Balance = $")
-                  .append(String.format("%.2f", accounts.get(i).getBalance()))
-                  .append("\n");
+        for (BankAccount account : accounts) {
+            if (account.getStatus()) {
+                result.append(account.getName())
+                      .append(": Balance = $")
+                      .append(String.format("%.2f", account.getBalance()))
+                      .append("\n");
+            }
         }
 
         return result.toString();
