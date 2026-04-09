@@ -43,13 +43,21 @@ public class BankAccount {
             String.format("Withdrew $%.2f | New balance: $%.2f", amount, balance)
         );
 
+<<<<<<< HEAD
         return  true;
 
+=======
+        return true;
+>>>>>>> 966cc68 (added account status and reopen account features)
     }
 
     public void closeAccount() {
         this.open = false;
     } 
+
+    public void reopenAccount() {
+        this.open = true;
+    }
 
     public boolean getStatus() {
         return this.open;
@@ -80,12 +88,11 @@ public class BankAccount {
     }
 
     public void transferMoney(BankAccount otherAccount, double amount) {
-        if(amount <= this.balance && this.open) {
+        if (amount <= this.balance && this.open) {
             this.balance -= amount;
             otherAccount.setBalance(otherAccount.getBalance() + amount);
             this.transactionHistory.add(
-                String.format("Transferred $%.2f | New balance: $%.2f", 
-                amount, balance)
+                String.format("Transferred $%.2f | New balance: $%.2f", amount, balance)
             );
             otherAccount.transactionHistory.add(
                 String.format("$%.2f transferred to this account | New balance: $%.2f",
@@ -94,7 +101,6 @@ public class BankAccount {
         } else {
             throw new IllegalArgumentException("Insufficient Funds");
         }
-        
     }
 
     public void rename(String newName) {

@@ -59,6 +59,12 @@ public class BankAccountTest {
         testAccount.closeAccount();
         assertFalse(testAccount.getStatus());
     }
+    
+    @Test
+    public void testAccountStartsOpen() {
+         BankAccount testAccount = new BankAccount();
+         assertTrue(testAccount.getStatus());
+    }
 
     @Test
     public void testTransferMoneyEmptyAccounts() {
@@ -69,8 +75,7 @@ public class BankAccountTest {
             fail();
         } catch (IllegalArgumentException e) {
             //test passes
-        }
-            
+        }  
     }
     
     @Test
@@ -136,4 +141,80 @@ public class BankAccountTest {
         testAccount.rename("my first account");
         assertEquals("my first account", testAccount.getName());
     }
+    @Test
+    public void testWithdrawValidAmount() {
+        BankAccount account = new BankAccount();
+        account.deposit(100);
+
+        account.withdraw(40);
+
+        assertEquals(60, account.getBalance(), 0.01);
+    }
+
+    @Test
+    public void testWithdrawExactBalance() {
+        BankAccount account = new BankAccount();
+        account.deposit(100);
+
+        account.withdraw(100);
+
+        assertEquals(0, account.getBalance(), 0.01);
+    }
+
+@Test
+public void testWithdrawTooMuch() {
+    BankAccount account = new BankAccount();
+    account.deposit(50);
+
+    try {
+        account.withdraw(100);
+        fail();
+    } catch (IllegalArgumentException e) {
+        // passes
+    }
+}
+
+@Test
+public void testWithdrawNegativeAmount() {
+    BankAccount account = new BankAccount();
+
+    try {
+        account.withdraw(-10);
+        fail();
+    } catch (IllegalArgumentException e) {
+        // passes
+    }
+}
+
+@Test
+public void testWithdrawFromClosedAccount() {
+    BankAccount account = new BankAccount();
+    account.deposit(50);
+    account.closeAccount();
+
+    try {
+        account.withdraw(10);
+        fail();
+    } catch (IllegalArgumentException e) {
+        // passes
+    }
+}
+
+  @Test
+  public void testWithdrawAddsTransactionHistory() {
+      BankAccount account = new BankAccount();
+      account.deposit(100);
+
+      account.withdraw(25);
+
+      assertEquals(2, account.getTransactionHistory().size());
+      assertTrue(account.getTransactionHistory().get(1).contains("Withdrew $25.00"));
+  }
+  @Test
+  public void testReopenClosedAccount() {
+      BankAccount testAccount = new BankAccount();
+      testAccount.closeAccount();
+      testAccount.reopenAccount();
+      assertTrue(testAccount.getStatus());
+  }
 }
