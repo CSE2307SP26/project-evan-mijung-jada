@@ -5,7 +5,7 @@
 ```bash
 chmod +x runApp.sh
 ./runApp.sh
-
+```
 ## Team Members:
 
 * Mijung 
