@@ -21,14 +21,12 @@ chmod +x runApp.sh
 5. A bank customer should be able to create an additional account with the bank. (Mijung)
 6. A bank customer should be able to close an existing account. (Evan)
 7. A bank customer should be able to transfer money from one account to another. (Evan)
-8. A bank adminstrator should be able to collect fees from existing accounts when necessary.
-9. A bank adminstrator should be able to add an interest payment to an existing account when necessary.
-10. A bank administrator should be able to collect fees from existing accounts when necessary. (Mijung)
-11. A bank administrator should be able to add an interest payment to an existing account when necessary. (Mijung)
-12. A bank customer should be able to rename an existing account. (Evan)
-13. A bank customer should be able to view all their accounts. (Evan)
-14. A bank customer should be able to see if an account is open or closed. (Jada)
-15. A bank customer should be able to reopen a closed account. (Jada)
+8. A bank administrator should be able to collect fees from existing accounts when necessary. (Mijung)
+9. A bank administrator should be able to add an interest payment to an existing account when necessary. (Mijung)
+10. A bank customer should be able to rename an existing account. (Evan)
+11. A bank customer should be able to view all their accounts. (Evan)
+12. A bank customer should be able to see if an account is open or closed. (Jada)
+13. A bank customer should be able to reopen a closed account. (Jada)
 
 ## What user stories were completed this iteration 2?
 
