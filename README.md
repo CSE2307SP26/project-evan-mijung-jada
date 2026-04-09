@@ -23,17 +23,14 @@ chmod +x runApp.sh
 7. A bank customer should be able to transfer money from one account to another. (Evan)
 8. A bank adminstrator should be able to collect fees from existing accounts when necessary.
 9. A bank adminstrator should be able to add an interest payment to an existing account when necessary.
+10. A bank administrator should be able to collect fees from existing accounts when necessary. (Mijung)
+11. A bank administrator should be able to add an interest payment to an existing account when necessary. (Mijung)
+12. A bank customer should be able to rename an existing account. (Evan)
+13. A bank customer should be able to view all their accounts. (Evan)
+14. A bank customer should be able to see if an account is open or closed. (Jada)
+15. A bank customer should be able to reopen a closed account. (Jada)
 
-## What user stories were completed this iteration?
-
-* A bank customer should be able to withdraw from an account.
-* A bank customer should be able to check their account balance.
-* A bank customer should be able to view their transaction history for an account. 
-* A bank customer should be able to create an additional account with the bank. 
-* A bank customer should be able to close an existing account. 
-* A bank customer should be able to transfer money from one account to another. 
-
-## What user stories do you intend to complete next iteration?
+## What user stories were completed this iteration 2?
 
 * A bank administrator should be able to collect fees from existing accounts when necessary. (Mijung)
 * A bank administrator should be able to add an interest payment to an existing account when necessary. (Mijung)
@@ -43,9 +40,18 @@ chmod +x runApp.sh
 * A bank customer should be able to reopen a closed account. (Jada)
 * Try cache in main menu to handle negative deposit and avoid getting program to crash when user puts text for number input.
 
+## What user stories do you intend to complete next iteration?
+
+* A bank customer should be able to set a PIN for their account.
+* A bank customer should be able to log in using their account ID and PIN.
+* A bank customer should only be able to deposit positive amounts (input validation).
+* A bank customer should receive a warning when their balance goes below zero.
+* A bank customer should be able to search for a specific transaction by amount or date.
+* A bank customer should be able to see the last 5 transactions (quick summary).
+
 ## Is there anything that you implemented but doesn't currently work?
 
-There are some edge cases that are not fully handled yet. For example, the program does not currently handle invalid input formats gracefully, such as when a user enters text instead of a number.
+We believe the application is fully functioning.
 
 
 
