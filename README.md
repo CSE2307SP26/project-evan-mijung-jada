@@ -1,5 +1,11 @@
 # project26
 
+## What commands are needed to compile and run your code from the command line?
+
+```bash
+chmod +x runApp.sh
+./runApp.sh
+
 ## Team Members:
 
 * Mijung 
@@ -41,9 +47,5 @@
 
 There are some edge cases that are not fully handled yet. For example, the program does not currently handle invalid input formats gracefully, such as when a user enters text instead of a number.
 
-## What commands are needed to compile and run your code from the command line?
 
-```bash
-chmod +x runApp.sh
-./runApp.sh
 
