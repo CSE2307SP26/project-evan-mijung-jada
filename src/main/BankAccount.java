@@ -64,6 +64,7 @@ public class BankAccount {
         if (amount <= 0 || !open) {
             throw new IllegalArgumentException("Invalid fee amount");
         }
+
         if (amount > balance) {
             throw new IllegalArgumentException("Insufficient funds");
         }
@@ -76,7 +77,7 @@ public class BankAccount {
 
     public void closeAccount() {
         this.open = false;
-    } 
+    }
 
     public void reopenAccount() {
         this.open = true;
