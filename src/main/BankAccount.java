@@ -5,14 +5,20 @@ import java.util.List;
 
 public class BankAccount {
 
+    private String name;
     private double balance;
     private List<String> transactionHistory;
     private boolean open;
 
     public BankAccount() {
+        this("Account");
+    }
+
+    public BankAccount(String name) {
         this.balance = 0;
         this.open = true;
         this.transactionHistory = new ArrayList<>();
+        this.name = name;
     }
 
     public void deposit(double amount) {
@@ -25,23 +31,47 @@ public class BankAccount {
             throw new IllegalArgumentException();
         }
     }
+
     public boolean withdraw(double amount) {
-    if (amount <= 0 || !open) {
-        throw new IllegalArgumentException("Invalid withdrawal amount");
+        if (amount <= 0 || !open) {
+            throw new IllegalArgumentException("Invalid withdrawal amount");
+        }
+
+        if (amount > balance) {
+            throw new IllegalArgumentException("Insufficient funds");
+        }
+
+        this.balance -= amount;
+
+        transactionHistory.add(
+            String.format("Withdrew $%.2f | New balance: $%.2f", amount, balance)
+        );
+        return true;
     }
 
-    if (amount > balance) {
-        throw new IllegalArgumentException("Insufficient funds");
+    public void addInterestPayment(double amount) {
+        if (amount <= 0 || !open) {
+            throw new IllegalArgumentException("Invalid interest payment amount");
+        }
+
+        this.balance += amount;
+        transactionHistory.add(
+            String.format("Interest payment $%.2f | New balance: $%.2f", amount, balance)
+        );
     }
 
-    this.balance -= amount;
+    public void collectFee(double amount) {
+        if (amount <= 0 || !open) {
+            throw new IllegalArgumentException("Invalid fee amount");
+        }
+        if (amount > balance) {
+            throw new IllegalArgumentException("Insufficient funds");
+        }
 
-    transactionHistory.add(
-        String.format("Withdrew $%.2f | New balance: $%.2f", amount, balance)
-    );
-
-    return true;
-
+        this.balance -= amount;
+        transactionHistory.add(
+            String.format("Fee charged $%.2f | New balance: $%.2f", amount, balance)
+        );
     }
 
     public void closeAccount() {
@@ -50,12 +80,6 @@ public class BankAccount {
 
     public void reopenAccount() {
         this.open = true;
-    
-    }
-
-    public boolean isOpen() {
-        return this.open;
-    
     }
 
     public boolean getStatus() {
@@ -87,12 +111,11 @@ public class BankAccount {
     }
 
     public void transferMoney(BankAccount otherAccount, double amount) {
-        if(amount <= this.balance && this.open) {
+        if (amount <= this.balance && this.open) {
             this.balance -= amount;
             otherAccount.setBalance(otherAccount.getBalance() + amount);
             this.transactionHistory.add(
-                String.format("Transferred $%.2f | New balance: $%.2f", 
-                amount, balance)
+                String.format("Transferred $%.2f | New balance: $%.2f", amount, balance)
             );
             otherAccount.transactionHistory.add(
                 String.format("$%.2f transferred to this account | New balance: $%.2f",
@@ -101,6 +124,13 @@ public class BankAccount {
         } else {
             throw new IllegalArgumentException("Insufficient Funds");
         }
-        
+    }
+
+    public void rename(String newName) {
+        this.name = newName;
+    }
+
+    public String getName() {
+        return this.name;
     }
 }
