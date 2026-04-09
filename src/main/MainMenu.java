@@ -13,7 +13,7 @@ public class MainMenu {
     }
 
     public void displayOptions() {
-        printer.displayOptions();
+        printer.displayOptions(false);
     }
 
     public void run() {

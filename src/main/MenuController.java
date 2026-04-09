@@ -11,30 +11,33 @@ public class MenuController {
     private static final int CREATE_ACCOUNT_SELECTION = 5;
     private static final int CLOSE_ACCOUNT_SELECTION = 6;
     private static final int TRANSFER_SELECTION = 7;
-    private static final int INTEREST_PAYMENT_SELECTION = 8;
-    private static final int FEE_COLLECTION_SELECTION = 9;
-    private static final int RENAME_SELECTION = 10;
-    private static final int VIEW_ACCOUNTS_SELECTION = 11;
-    private static final int CHECK_ACCOUNT_STATUS_SELECTION = 12;
-    private static final int REOPEN_ACCOUNT_SELECTION = 13;
-    private static final int EXIT_SELECTION = 14;
+    private static final int RENAME_SELECTION = 8;
+    private static final int VIEW_ACCOUNTS_SELECTION = 9;
+    private static final int CHECK_ACCOUNT_STATUS_SELECTION = 10;
+    private static final int REOPEN_ACCOUNT_SELECTION = 11;
+    private static final int EXIT_SELECTION = 12;
+    private static final int ADMIN_MODE_SELECTION = 13;
+    private static final int INTEREST_PAYMENT_SELECTION = 14;
+    private static final int FEE_COLLECTION_SELECTION = 15;
 
-    private static final int MAX_SELECTION = 14;
+    private static final int MAX_SELECTION = 15;
 
     private final Bank bank;
     private final Scanner keyboardInput;
     private final MenuPrinter printer;
+    private boolean adminMode;
 
     public MenuController(Bank bank, Scanner keyboardInput, MenuPrinter printer) {
         this.bank = bank;
         this.keyboardInput = keyboardInput;
         this.printer = printer;
+        this.adminMode = false;
     }
 
     public void run() {
         int selection = -1;
         while (selection != EXIT_SELECTION) {
-            printer.displayOptions();
+            printer.displayOptions(adminMode);
             selection = getUserSelection(MAX_SELECTION);
             processInput(selection);
             System.out.println();
@@ -89,12 +92,6 @@ public class MenuController {
             case TRANSFER_SELECTION:
                 performTransfer();
                 break;
-            case INTEREST_PAYMENT_SELECTION:
-                addInterestPayment();
-                break;
-            case FEE_COLLECTION_SELECTION:
-                collectFee();
-                break;
             case CHECK_ACCOUNT_STATUS_SELECTION:
                 checkAccountStatus();
                 break;
@@ -110,9 +107,48 @@ public class MenuController {
             case VIEW_ACCOUNTS_SELECTION:
                 viewAllAccounts();
                 break;
+            case ADMIN_MODE_SELECTION:
+                toggleAdminMode();
+                break;
+            case INTEREST_PAYMENT_SELECTION:
+                if (ensureAdminAccess()) {
+                    addInterestPayment();
+                }
+                break;
+            case FEE_COLLECTION_SELECTION:
+                if (ensureAdminAccess()) {
+                    collectFee();
+                }
+                break;
             default:
                 System.out.println("Invalid selection.");
                 break;
+        }
+    }
+
+    private boolean ensureAdminAccess() {
+        if (adminMode) {
+            return true;
+        }
+
+        System.out.println("Admin access required. Select option 13 to enable admin mode.");
+        return false;
+    }
+
+    private void toggleAdminMode() {
+        if (adminMode) {
+            adminMode = false;
+            System.out.println("Admin mode disabled.");
+            return;
+        }
+
+        System.out.print("Enter passcode (0000): ");
+        String passcode = keyboardInput.nextLine();
+        if ("0000".equals(passcode)) {
+            adminMode = true;
+            System.out.println("Admin mode enabled.");
+        } else {
+            System.out.println("Invalid passcode.");
         }
     }
 
