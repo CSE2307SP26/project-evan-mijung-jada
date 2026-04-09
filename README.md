@@ -42,8 +42,8 @@ chmod +x runApp.sh
 
 * A bank customer should be able to create a user profile with a username and PIN.(Mijung)
 * A bank customer should be able to log in using their username and PIN.(Mijung)
-* A bank customer should be able to open a checking account.
-* A bank customer should be able to open a savings account.
+* A bank customer should be able to open a checking account. (Evan)
+* A bank customer should be able to open a savings account. (Evan)
 * A bank administrator should be able to freeze an account.
 * A bank administrator should be able to unfreeze an account.
 
