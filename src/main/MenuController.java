@@ -12,6 +12,7 @@ public class MenuController {
     private static final int CLOSE_ACCOUNT_SELECTION = 6;
     private static final int TRANSFER_SELECTION = 7;
     private static final int INTEREST_PAYMENT_SELECTION = 8;
+    private static final int FEE_COLLECTION_SELECTION = 9;
     private static final int RENAME_SELECTION = 10;
     private static final int VIEW_ACCOUNTS_SELECTION = 11;
     private static final int CHECK_ACCOUNT_STATUS_SELECTION = 12;
@@ -91,6 +92,9 @@ public class MenuController {
             case INTEREST_PAYMENT_SELECTION:
                 addInterestPayment();
                 break;
+            case FEE_COLLECTION_SELECTION:
+                collectFee();
+                break;
             case CHECK_ACCOUNT_STATUS_SELECTION:
                 checkAccountStatus();
                 break;
@@ -116,14 +120,24 @@ public class MenuController {
         int accountIndex = getAccountSelection();
         BankAccount selectedAccount = bank.getAccount(accountIndex);
 
-        double depositAmount = -1;
-        while (depositAmount < 0) {
+        while (true) {
             System.out.print("How much would you like to deposit: ");
-            depositAmount = keyboardInput.nextDouble();
-        }
+            double depositAmount = keyboardInput.nextDouble();
+            keyboardInput.nextLine();
 
-        selectedAccount.deposit(depositAmount);
-        System.out.println("Deposit complete.");
+            if (depositAmount <= 0) {
+                System.out.println("Deposit amount must be greater than 0.");
+                continue;
+            }
+
+            try {
+                selectedAccount.deposit(depositAmount);
+                System.out.println("Deposit complete.");
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Deposit failed: " + e.getMessage());
+            }
+        }
     }
 
     public void performWithdraw() {
@@ -207,6 +221,20 @@ public class MenuController {
 
         bank.addInterestPayment(accountIndex, interestAmount);
         System.out.println("Interest payment applied.");
+    }
+
+    public void collectFee() {
+        int accountIndex = getAccountSelection();
+
+        double feeAmount = -1;
+        while (feeAmount <= 0) {
+            System.out.print("Enter fee amount: ");
+            feeAmount = keyboardInput.nextDouble();
+            keyboardInput.nextLine();
+        }
+
+        bank.collectFee(accountIndex, feeAmount);
+        System.out.println("Fee collected.");
     }
 
     public void checkAccountStatus() {

@@ -30,6 +30,23 @@ public class MenuPrinterTest {
     }
 
     @Test
+    public void testDisplayOptionsShowsFeeCollection() {
+        PrintStream originalOut = System.out;
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStream));
+
+        try {
+            MenuPrinter printer = new MenuPrinter();
+            printer.displayOptions();
+        } finally {
+            System.setOut(originalOut);
+        }
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("Collect fee"));
+    }
+
+    @Test
     public void testDisplayAccountSelectionShowsNames() {
         PrintStream originalOut = System.out;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

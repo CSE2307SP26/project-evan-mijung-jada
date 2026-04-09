@@ -12,7 +12,7 @@ public class MenuPrinter {
         System.out.println("6. Close an existing account");
         System.out.println("7. Transfer money from one account to another");
         System.out.println("8. Add interest payment to an account");
-        System.out.println("9. Mijung");
+        System.out.println("9. Collect fee from an account");
         System.out.println("10. Rename an existing account");
         System.out.println("11. View all accounts");
         System.out.println("12. Check account status (open or closed)");

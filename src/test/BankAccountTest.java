@@ -181,6 +181,49 @@ public class BankAccountTest {
             // test passes
         }
     }
+
+    @Test
+    public void testCollectFeeReducesBalance() {
+        BankAccount testAccount = new BankAccount(null);
+        testAccount.deposit(20);
+
+        testAccount.collectFee(5);
+
+        assertEquals(15, testAccount.getBalance(), 0.01);
+    }
+
+    @Test
+    public void testCollectFeeAddsTransactionHistory() {
+        BankAccount testAccount = new BankAccount(null);
+        testAccount.deposit(20);
+        testAccount.collectFee(2.50);
+
+        assertTrue(testAccount.getTransactionHistory().get(1).contains("Fee charged $2.50"));
+    }
+
+    @Test
+    public void testCollectFeeInvalidAmount() {
+        BankAccount testAccount = new BankAccount(null);
+        try {
+            testAccount.collectFee(0);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // test passes
+        }
+    }
+
+    @Test
+    public void testCollectFeeInsufficientFunds() {
+        BankAccount testAccount = new BankAccount(null);
+        testAccount.deposit(3);
+
+        try {
+            testAccount.collectFee(5);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // test passes
+        }
+    }
     @Test
     public void testWithdrawValidAmount() {
         BankAccount account = new BankAccount();
