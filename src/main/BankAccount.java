@@ -10,6 +10,10 @@ public class BankAccount {
     private List<String> transactionHistory;
     private boolean open;
 
+    public BankAccount() {
+        this("Account");
+    }
+
     public BankAccount(String name) {
         this.balance = 0;
         this.open = true;
@@ -42,13 +46,18 @@ public class BankAccount {
         transactionHistory.add(
             String.format("Withdrew $%.2f | New balance: $%.2f", amount, balance)
         );
-
-<<<<<<< HEAD
-        return  true;
-
-=======
         return true;
->>>>>>> 966cc68 (added account status and reopen account features)
+    }
+
+    public void addInterestPayment(double amount) {
+        if (amount <= 0 || !open) {
+            throw new IllegalArgumentException("Invalid interest payment amount");
+        }
+
+        this.balance += amount;
+        transactionHistory.add(
+            String.format("Interest payment $%.2f | New balance: $%.2f", amount, balance)
+        );
     }
 
     public void closeAccount() {

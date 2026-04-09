@@ -31,4 +31,11 @@ public class BankTest {
         assertEquals(3, bank.getNumberOfAccounts());
         assertEquals("Account 3", bank.getAccount(2).getName());
     }
+
+    @Test
+    public void testAddInterestPaymentUpdatesBalance() {
+        Bank bank = new Bank();
+        bank.addInterestPayment(0, 7.25);
+        assertEquals(7.25, bank.getAccount(0).getBalance(), 0.01);
+    }
 }
