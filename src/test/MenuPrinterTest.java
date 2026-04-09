@@ -20,13 +20,47 @@ public class MenuPrinterTest {
 
         try {
             MenuPrinter printer = new MenuPrinter();
-            printer.displayOptions();
+            printer.displayOptions(true);
         } finally {
             System.setOut(originalOut);
         }
 
         String output = outputStream.toString();
         assertTrue(output.contains("Add interest payment"));
+    }
+
+    @Test
+    public void testDisplayOptionsShowsFeeCollection() {
+        PrintStream originalOut = System.out;
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStream));
+
+        try {
+            MenuPrinter printer = new MenuPrinter();
+            printer.displayOptions(true);
+        } finally {
+            System.setOut(originalOut);
+        }
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("Collect fee"));
+    }
+
+    @Test
+    public void testDisplayOptionsShowsAdminMode() {
+        PrintStream originalOut = System.out;
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStream));
+
+        try {
+            MenuPrinter printer = new MenuPrinter();
+            printer.displayOptions(false);
+        } finally {
+            System.setOut(originalOut);
+        }
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("Admin mode"));
     }
 
     @Test

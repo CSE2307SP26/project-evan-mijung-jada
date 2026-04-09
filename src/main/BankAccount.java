@@ -60,6 +60,21 @@ public class BankAccount {
         );
     }
 
+    public void collectFee(double amount) {
+        if (amount <= 0 || !open) {
+            throw new IllegalArgumentException("Invalid fee amount");
+        }
+
+        if (amount > balance) {
+            throw new IllegalArgumentException("Insufficient funds");
+        }
+
+        this.balance -= amount;
+        transactionHistory.add(
+            String.format("Fee charged $%.2f | New balance: $%.2f", amount, balance)
+        );
+    }
+
     public void closeAccount() {
         this.open = false;
     } 

@@ -32,6 +32,11 @@ public class Bank {
         account.addInterestPayment(amount);
     }
 
+    public void collectFee(int index, double amount) {
+        BankAccount account = getAccount(index);
+        account.collectFee(amount);
+    }
+
     public String getAllAccountsSummary() {
         StringBuilder result = new StringBuilder();
 

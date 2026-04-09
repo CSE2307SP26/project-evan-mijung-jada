@@ -3,6 +3,10 @@ package main;
 public class MenuPrinter {
 
     public void displayOptions() {
+        displayOptions(false);
+    }
+
+    public void displayOptions(boolean showAdminOptions) {
         System.out.println("Welcome to the 237 Bank App!");
         System.out.println("1. Make a deposit");
         System.out.println("2. Withdraw from an account");
@@ -11,13 +15,16 @@ public class MenuPrinter {
         System.out.println("5. Create an additional account");
         System.out.println("6. Close an existing account");
         System.out.println("7. Transfer money from one account to another");
-        System.out.println("8. Add interest payment to an account");
-        System.out.println("9. Mijung");
-        System.out.println("10. Rename an existing account");
-        System.out.println("11. View all accounts");
-        System.out.println("12. Check account status (open or closed)");
-        System.out.println("13. Reopen a closed account");
-        System.out.println("14. Exit the app");
+        System.out.println("8. Rename an existing account");
+        System.out.println("9. View all accounts");
+        System.out.println("10. Check account status (open or closed)");
+        System.out.println("11. Reopen a closed account");
+        System.out.println("12. Exit the app");
+        System.out.println("13. Admin mode");
+        if (showAdminOptions) {
+            System.out.println("14. Add interest payment to an account");
+            System.out.println("15. Collect fee from an account");
+        }
     }
 
     public void displayAccountSelection(Bank bank) {

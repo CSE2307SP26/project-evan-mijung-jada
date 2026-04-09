@@ -25,6 +25,6 @@ public class MainMenuTest {
         }
 
         String output = outputStream.toString();
-        assertTrue(output.contains("Add interest payment"));
+        assertTrue(output.contains("Admin mode"));
     }
 }

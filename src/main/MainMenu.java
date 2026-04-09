@@ -1,5 +1,7 @@
 package main;
 
+import java.util.Scanner;
+
 public class MainMenu {
 
     private final MenuPrinter printer;
@@ -7,11 +9,11 @@ public class MainMenu {
 
     public MainMenu() {
         this.printer = new MenuPrinter();
-        this.controller = new MenuController(new Bank(), new java.util.Scanner(System.in), printer);
+        this.controller = new MenuController(new Bank(), new Scanner(System.in), printer);
     }
 
     public void displayOptions() {
-        printer.displayOptions();
+        printer.displayOptions(false);
     }
 
     public void run() {

@@ -38,4 +38,12 @@ public class BankTest {
         bank.addInterestPayment(0, 7.25);
         assertEquals(7.25, bank.getAccount(0).getBalance(), 0.01);
     }
+
+    @Test
+    public void testCollectFeeUpdatesBalance() {
+        Bank bank = new Bank();
+        bank.getAccount(0).deposit(10);
+        bank.collectFee(0, 4.50);
+        assertEquals(5.50, bank.getAccount(0).getBalance(), 0.01);
+    }
 }
