@@ -42,12 +42,12 @@ chmod +x runApp.sh
 
 ## What user stories do you intend to complete next iteration?
 
-* A bank customer should be able to set a PIN for their account.
-* A bank customer should be able to log in using their account ID and PIN.
-* A bank customer should only be able to deposit positive amounts (input validation).
-* A bank customer should receive a warning when their balance goes below zero.
-* A bank customer should be able to search for a specific transaction by amount or date.
-* A bank customer should be able to see the last 5 transactions (quick summary).
+* A bank customer should be able to create a user profile with a username and PIN.(Mijung)
+* A bank customer should be able to log in using their username and PIN.(Mijung)
+* A bank customer should be able to open a checking account.
+* A bank customer should be able to open a savings account.
+* A bank administrator should be able to freeze an account.
+* A bank administrator should be able to unfreeze an account.
 
 ## Is there anything that you implemented but doesn't currently work?
 
