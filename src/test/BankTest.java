@@ -13,12 +13,13 @@ public class BankTest {
         Bank bank = new Bank();
         assertEquals(1, bank.getNumberOfAccounts());
         assertEquals("Account 1", bank.getAccount(0).getName());
+        assertEquals("Checking", bank.getAccount(0).getType());
     }
 
     @Test
     public void testCreateAdditionalAccount() {
         Bank bank = new Bank();
-        bank.createAdditionalAccount();
+        bank.createAdditionalAccount(null);
         assertEquals(2, bank.getNumberOfAccounts());
         assertEquals("Account 2", bank.getAccount(1).getName());
     }
@@ -26,8 +27,8 @@ public class BankTest {
     @Test
     public void testCreateMultipleAdditionalAccounts() {
         Bank bank = new Bank();
-        bank.createAdditionalAccount();
-        bank.createAdditionalAccount();
+        bank.createAdditionalAccount(null);
+        bank.createAdditionalAccount(null);
         assertEquals(3, bank.getNumberOfAccounts());
         assertEquals("Account 3", bank.getAccount(2).getName());
     }
@@ -45,5 +46,13 @@ public class BankTest {
         bank.getAccount(0).deposit(10);
         bank.collectFee(0, 4.50);
         assertEquals(5.50, bank.getAccount(0).getBalance(), 0.01);
+    }
+
+    @Test
+    public void testCreateCheckingAccount() {
+        Bank bank = new Bank();
+        bank.createAdditionalAccount("checking");
+        assertEquals(2, bank.getNumberOfAccounts());
+        assertEquals("Checking", bank.getAccount(1).getType());
     }
 }
