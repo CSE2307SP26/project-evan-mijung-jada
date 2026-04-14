@@ -9,16 +9,18 @@ public class BankAccount {
     private double balance;
     private List<String> transactionHistory;
     private boolean open;
+    private String type;
 
     public BankAccount() {
-        this("Account");
+        this("Account", "Checking");
     }
 
-    public BankAccount(String name) {
+    public BankAccount(String name, String type) {
         this.balance = 0;
         this.open = true;
         this.transactionHistory = new ArrayList<>();
         this.name = name;
+        this.type = type;
     }
 
     public void deposit(double amount) {
@@ -133,5 +135,9 @@ public class BankAccount {
 
     public String getName() {
         return this.name;
+    }
+
+    public String getType() {
+        return this.type;
     }
 }

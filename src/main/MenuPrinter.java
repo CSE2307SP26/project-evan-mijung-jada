@@ -32,7 +32,7 @@ public class MenuPrinter {
 
         System.out.println("Select an account:");
         for (int i = 0; i < max; i++) {
-            System.out.println((i + 1) + ": " + bank.getAccount(i).getName());
+            System.out.println((i + 1) + ": " + bank.getAccount(i).getName() + " | " + bank.getAccount(i).getType());
         }
     }
 }

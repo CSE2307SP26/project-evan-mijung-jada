@@ -71,7 +71,7 @@ public class MenuPrinterTest {
 
         try {
             Bank bank = new Bank();
-            bank.createAdditionalAccount();
+            bank.createAdditionalAccount(null);
             MenuPrinter printer = new MenuPrinter();
             printer.displayAccountSelection(bank);
         } finally {
