@@ -10,6 +10,7 @@ public class Bank {
 
     public Bank() {
         this.accounts = new ArrayList<>();
+        this.accounts.add(new BankAccount("Account " + (accounts.size() + 1))); // start with one default account
         this.userProfiles = new ArrayList<>();
     }
 
@@ -87,6 +88,7 @@ public class Bank {
             }
         }
         return false;
+        userProfiles.add(new UserProfile(username, pin));
     }
 
     public int getNumberOfUserProfiles() {

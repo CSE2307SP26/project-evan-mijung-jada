@@ -1,7 +1,5 @@
 package main;
 
-import java.util.Scanner;
-
 public class MenuController {
 
     private static final int DEPOSIT_SELECTION = 1;
@@ -26,21 +24,25 @@ public class MenuController {
 
     private static final int MAX_CUSTOMER_SELECTION = 13;
     private static final int MAX_ADMIN_SELECTION = 3;
+    private static final int EXIT_SELECTION = 12;
+    private static final int MAX_SELECTION = 16;
 
-    private final Bank bank;
-    private final Scanner keyboardInput;
     private final MenuPrinter printer;
     private boolean adminMode;
     private String currentUsername;
     private int currentAccountIndex;
+    private final AccountSelector accountSelector;
+    private final CustomerMenu customerMenu;
+    private final AdminMenu adminMenu;
 
-    public MenuController(Bank bank, Scanner keyboardInput, MenuPrinter printer) {
-        this.bank = bank;
-        this.keyboardInput = keyboardInput;
+    public MenuController(Bank bank, java.util.Scanner keyboardInput, MenuPrinter printer) {
         this.printer = printer;
         this.adminMode = false;
         this.currentUsername = null;
         this.currentAccountIndex = -1;
+        this.accountSelector = new AccountSelector(bank, keyboardInput, printer);
+        this.customerMenu = new CustomerMenu(bank, keyboardInput, accountSelector);
+        this.adminMenu = new AdminMenu(bank, keyboardInput, accountSelector);
     }
 
     public void run() {
@@ -65,6 +67,8 @@ public class MenuController {
             BankAccount currentAccount = getCurrentAccount();
             printer.displayCustomerOptions(currentUsername, currentAccount.getName());
             selection = getUserSelection(MAX_CUSTOMER_SELECTION);
+            printer.displayOptions(adminMenu.isAdminMode());
+            selection = getUserSelection(MAX_SELECTION);
             processInput(selection);
             System.out.println();
         }
@@ -84,8 +88,7 @@ public class MenuController {
         int selection = -1;
         while (selection < 1 || selection > max) {
             System.out.print("Please make a selection: ");
-            selection = keyboardInput.nextInt();
-            keyboardInput.nextLine();
+            selection = accountSelector.readInt();
         }
         return selection;
     }
@@ -107,6 +110,7 @@ public class MenuController {
         }
 
         return selection - 1;
+        return accountSelector.selectAccount();
     }
 
     private int getAccountSelection(java.util.List<Integer> indexes, boolean showOwner) {
@@ -479,5 +483,19 @@ public class MenuController {
     public void viewAllAccounts() {
         System.out.println("\nAll Accounts Summary:");
         System.out.println(bank.getAllAccountsSummary());
+        if (selection == EXIT_SELECTION) {
+            System.out.println("Exiting app...");
+            return;
+        }
+
+        if (customerMenu.handleSelection(selection)) {
+            return;
+        }
+
+        if (adminMenu.handleSelection(selection)) {
+            return;
+        }
+
+        System.out.println("Invalid selection.");
     }
 }

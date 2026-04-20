@@ -55,6 +55,8 @@ We believe the application is fully functioning.
 
 - On launch, choose: (1) create a user profile, (2) login with existing profile, or (3) login as admin.
 - Admin login uses passcode 0000 and unlocks interest payment and fee collection options.
+- Admin features are available by choosing menu option 13 (Admin mode) and entering passcode 0000.
+- Once admin mode is enabled, options 14 and 15 appear for interest payments and fee collection.
 
 
 
