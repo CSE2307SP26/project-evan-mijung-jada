@@ -20,7 +20,7 @@ public class MenuPrinterTest {
 
         try {
             MenuPrinter printer = new MenuPrinter();
-            printer.displayOptions(true);
+            printer.displayAdminOptions();
         } finally {
             System.setOut(originalOut);
         }
@@ -37,7 +37,7 @@ public class MenuPrinterTest {
 
         try {
             MenuPrinter printer = new MenuPrinter();
-            printer.displayOptions(true);
+            printer.displayAdminOptions();
         } finally {
             System.setOut(originalOut);
         }
@@ -47,20 +47,20 @@ public class MenuPrinterTest {
     }
 
     @Test
-    public void testDisplayOptionsShowsAdminMode() {
+    public void testDisplayLoginOptionsShowsCreateProfile() {
         PrintStream originalOut = System.out;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
 
         try {
             MenuPrinter printer = new MenuPrinter();
-            printer.displayOptions(false);
+            printer.displayLoginOptions();
         } finally {
             System.setOut(originalOut);
         }
 
         String output = outputStream.toString();
-        assertTrue(output.contains("Admin mode"));
+        assertTrue(output.contains("Create a user profile"));
     }
 
     @Test
@@ -80,6 +80,5 @@ public class MenuPrinterTest {
 
         String output = outputStream.toString();
         assertTrue(output.contains("Account 1"));
-        assertTrue(output.contains("Account 2"));
     }
 }

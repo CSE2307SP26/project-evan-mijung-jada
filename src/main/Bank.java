@@ -6,14 +6,97 @@ import java.util.List;
 public class Bank {
 
     private List<BankAccount> accounts;
+    private List<UserProfile> userProfiles;
 
     public Bank() {
         this.accounts = new ArrayList<>();
-        this.accounts.add(new BankAccount("Account " + (accounts.size() + 1))); // start with one default account
+        this.userProfiles = new ArrayList<>();
+    }
+
+    public void createUserProfile(String username, String pin) {
+        if (isUsernameTaken(username)) {
+            throw new IllegalArgumentException("Username is already taken.");
+        }
+        userProfiles.add(new UserProfile(username, pin));
+        createAccountForUser(username);
+    }
+
+    private void createAccountForUser(String username) {
+        BankAccount account = new BankAccount("Account " + (accounts.size() + 1));
+        account.setOwner(username);
+        accounts.add(account);
+    }
+
+    public void createAdditionalAccountForUser(String username) {
+        createAccountForUser(username);
+    }
+
+    public int findFirstAccountIndexForUser(String username) {
+        if (username == null) {
+            return -1;
+        }
+
+        String normalized = username.trim();
+        for (int i = 0; i < accounts.size(); i++) {
+            if (accounts.get(i).getOwner().equalsIgnoreCase(normalized)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public List<Integer> getAccountIndexesForUser(String username) {
+        List<Integer> indexes = new ArrayList<>();
+        if (username == null) {
+            return indexes;
+        }
+
+        String normalized = username.trim();
+        for (int i = 0; i < accounts.size(); i++) {
+            if (accounts.get(i).getOwner().equalsIgnoreCase(normalized)) {
+                indexes.add(i);
+            }
+        }
+        return indexes;
+    }
+
+    public boolean authenticateUser(String username, String pin) {
+        if (username == null || pin == null) {
+            return false;
+        }
+
+        String normalized = username.trim();
+        for (UserProfile profile : userProfiles) {
+            if (profile.getUsername().equalsIgnoreCase(normalized)
+                    && profile.matchesPin(pin)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isUsernameTaken(String username) {
+        if (username == null) {
+            return false;
+        }
+
+        String normalized = username.trim();
+        for (UserProfile profile : userProfiles) {
+            if (profile.getUsername().equalsIgnoreCase(normalized)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int getNumberOfUserProfiles() {
+        return userProfiles.size();
     }
 
     public void createAdditionalAccount() {
-        accounts.add(new BankAccount("Account " + (accounts.size() + 1)));
+        BankAccount account = new BankAccount("Account " + (accounts.size() + 1));
+        account.setOwner("Unassigned");
+        accounts.add(account);
     }
 
     public int getNumberOfAccounts() {
