@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 public class MainMenuTest {
 
     @Test
-    public void testDisplayOptionsShowsInterestPayment() {
+    public void testDisplayOptionsShowsCreateProfile() {
         PrintStream originalOut = System.out;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
@@ -25,6 +25,6 @@ public class MainMenuTest {
         }
 
         String output = outputStream.toString();
-        assertTrue(output.contains("Admin mode"));
+        assertTrue(output.contains("Create a user profile"));
     }
 }
