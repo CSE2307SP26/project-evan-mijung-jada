@@ -51,5 +51,10 @@ chmod +x runApp.sh
 
 We believe the application is fully functioning.
 
+## Additional notes
+
+- Admin features are available by choosing menu option 13 (Admin mode) and entering passcode 0000.
+- Once admin mode is enabled, options 14 and 15 appear for interest payments and fee collection.
+
 
 

@@ -6,10 +6,20 @@ import java.util.List;
 public class Bank {
 
     private List<BankAccount> accounts;
+    private List<UserProfile> userProfiles;
 
     public Bank() {
         this.accounts = new ArrayList<>();
         this.accounts.add(new BankAccount("Account " + (accounts.size() + 1))); // start with one default account
+        this.userProfiles = new ArrayList<>();
+    }
+
+    public void createUserProfile(String username, String pin) {
+        userProfiles.add(new UserProfile(username, pin));
+    }
+
+    public int getNumberOfUserProfiles() {
+        return userProfiles.size();
     }
 
     public void createAdditionalAccount() {
