@@ -10,6 +10,15 @@ public class Bank {
 
     public Bank() {
         this.accounts = new ArrayList<>();
+        this.accounts.add(new BankAccount("Account " + (accounts.size() + 1), "Checking")); // start with one default account
+    }
+
+    public void createAdditionalAccount(String type) {
+        if(type.equals("checking")) {
+            accounts.add(new CheckingAccount("Account " + (accounts.size() + 1)));
+        } else {
+            throw new IllegalArgumentException("Invalid account type.");
+        }
         this.accounts.add(new BankAccount("Account " + (accounts.size() + 1))); // start with one default account
         this.userProfiles = new ArrayList<>();
     }
@@ -128,6 +137,7 @@ public class Bank {
         for (BankAccount account : accounts) {
             if (account.getStatus()) {
                 result.append(account.getName())
+                      .append(" | " + account.getType())
                       .append(": Balance = $")
                       .append(String.format("%.2f", account.getBalance()))
                       .append("\n");

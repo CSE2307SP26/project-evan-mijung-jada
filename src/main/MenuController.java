@@ -104,9 +104,14 @@ public class MenuController {
 
         int selection = -1;
         while (selection < 1 || selection > max) {
-            System.out.print("Choose account number: ");
-            selection = keyboardInput.nextInt();
-            keyboardInput.nextLine();
+            try {
+                System.out.print("Choose account number: ");
+                selection = keyboardInput.nextInt();
+                keyboardInput.nextLine();
+            } catch (Exception e) {
+                System.out.println("Invalid input. Please enter a number.");
+                keyboardInput.nextLine(); // Clear the invalid input
+            }
         }
 
         return selection - 1;
@@ -362,6 +367,15 @@ public class MenuController {
     }
 
     public void createAdditionalAccount() {
+        try {
+            System.out.print("Checking or Savings?: ");
+            String type = keyboardInput.nextLine();
+            bank.createAdditionalAccount(type.toLowerCase());
+            System.out.println("New " + type + " account created successfully.");
+            System.out.println("Total accounts: " + bank.getNumberOfAccounts());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Failed to create additional account: " + e.getMessage());
+        }
         bank.createAdditionalAccountForUser(currentUsername);
         System.out.println("New account created successfully.");
         System.out.println("Total accounts: " + getUserAccountIndexes().size());

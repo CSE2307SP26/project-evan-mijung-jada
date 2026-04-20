@@ -80,6 +80,8 @@ public class MenuPrinter {
 
     public void displayAccountSelection(Bank bank, java.util.List<Integer> indexes, boolean showOwner) {
         System.out.println("Select an account:");
+        for (int i = 0; i < max; i++) {
+            System.out.println((i + 1) + ": " + bank.getAccount(i).getName() + " | " + bank.getAccount(i).getType());
         if (indexes.isEmpty()) {
             System.out.println("No accounts available.");
             return;
