@@ -25,6 +25,7 @@ public class MenuPrinter {
             System.out.println("14. Add interest payment to an account");
             System.out.println("15. Collect fee from an account");
         }
+        System.out.println("16. Create a user profile");
     }
 
     public void displayAccountSelection(Bank bank) {

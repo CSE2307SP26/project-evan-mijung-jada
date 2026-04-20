@@ -77,7 +77,7 @@ public class BankAccount {
 
     public void closeAccount() {
         this.open = false;
-    } 
+    }
 
     public void reopenAccount() {
         this.open = true;

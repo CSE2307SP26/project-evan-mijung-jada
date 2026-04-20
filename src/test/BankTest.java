@@ -46,4 +46,11 @@ public class BankTest {
         bank.collectFee(0, 4.50);
         assertEquals(5.50, bank.getAccount(0).getBalance(), 0.01);
     }
+
+    @Test
+    public void testCreateUserProfileIncreasesCount() {
+        Bank bank = new Bank();
+        bank.createUserProfile("jada", "1234");
+        assertEquals(1, bank.getNumberOfUserProfiles());
+    }
 }
