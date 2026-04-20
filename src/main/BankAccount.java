@@ -6,6 +6,7 @@ import java.util.List;
 public class BankAccount {
 
     private String name;
+    private String owner;
     private double balance;
     private List<String> transactionHistory;
     private boolean open;
@@ -21,17 +22,21 @@ public class BankAccount {
         this.transactionHistory = new ArrayList<>();
         this.name = name;
         this.type = type;
+        this.owner = "Unassigned";
     }
 
     public void deposit(double amount) {
-        if (amount > 0 && open) {
-            this.balance += amount;
-            transactionHistory.add(
-                String.format("Deposited $%.2f | New balance: $%.2f", amount, balance)
-            );
-        } else {
-            throw new IllegalArgumentException();
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Deposit amount must be greater than 0.");
         }
+        if (!open) {
+            throw new IllegalArgumentException("Account is closed.");
+        }
+
+        this.balance += amount;
+        transactionHistory.add(
+            String.format("Deposited $%.2f | New balance: $%.2f", amount, balance)
+        );
     }
 
     public boolean withdraw(double amount) {
@@ -79,7 +84,7 @@ public class BankAccount {
 
     public void closeAccount() {
         this.open = false;
-    } 
+    }
 
     public void reopenAccount() {
         this.open = true;
@@ -139,5 +144,15 @@ public class BankAccount {
 
     public String getType() {
         return this.type;
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        if (owner == null || owner.trim().isEmpty()) {
+            this.owner = "Unassigned";
+        } else {
+            this.owner = owner.trim();
+        }
     }
 }

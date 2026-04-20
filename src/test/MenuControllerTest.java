@@ -15,7 +15,8 @@ public class MenuControllerTest {
     @Test
     public void testGetUserSelectionReturnsChoice() {
         MenuController controller = new MenuController(new Bank(), new Scanner("8\n"), new MenuPrinter());
-        assertEquals(8, controller.getUserSelection(15));
+        assertEquals(8, controller.getUserSelection(13));
+        assertEquals(8, controller.getUserSelection(16));
     }
 
     @Test

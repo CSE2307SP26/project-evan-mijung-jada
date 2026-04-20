@@ -9,11 +9,12 @@ import org.junit.jupiter.api.Test;
 public class BankTest {
 
     @Test
-    public void testBankStartsWithOneAccount() {
+    public void testBankStartsWithNoAccounts() {
         Bank bank = new Bank();
         assertEquals(1, bank.getNumberOfAccounts());
         assertEquals("Account 1", bank.getAccount(0).getName());
         assertEquals("Checking", bank.getAccount(0).getType());
+        assertEquals(0, bank.getNumberOfAccounts());
     }
 
     @Test
@@ -22,6 +23,9 @@ public class BankTest {
         bank.createAdditionalAccount(null);
         assertEquals(2, bank.getNumberOfAccounts());
         assertEquals("Account 2", bank.getAccount(1).getName());
+        bank.createAdditionalAccount();
+        assertEquals(1, bank.getNumberOfAccounts());
+        assertEquals("Account 1", bank.getAccount(0).getName());
     }
 
     @Test
@@ -31,11 +35,16 @@ public class BankTest {
         bank.createAdditionalAccount(null);
         assertEquals(3, bank.getNumberOfAccounts());
         assertEquals("Account 3", bank.getAccount(2).getName());
+        bank.createAdditionalAccount();
+        bank.createAdditionalAccount();
+        assertEquals(2, bank.getNumberOfAccounts());
+        assertEquals("Account 2", bank.getAccount(1).getName());
     }
 
     @Test
     public void testAddInterestPaymentUpdatesBalance() {
         Bank bank = new Bank();
+        bank.createAdditionalAccount();
         bank.addInterestPayment(0, 7.25);
         assertEquals(7.25, bank.getAccount(0).getBalance(), 0.01);
     }
@@ -43,6 +52,7 @@ public class BankTest {
     @Test
     public void testCollectFeeUpdatesBalance() {
         Bank bank = new Bank();
+        bank.createAdditionalAccount();
         bank.getAccount(0).deposit(10);
         bank.collectFee(0, 4.50);
         assertEquals(5.50, bank.getAccount(0).getBalance(), 0.01);
@@ -54,5 +64,23 @@ public class BankTest {
         bank.createAdditionalAccount("checking");
         assertEquals(2, bank.getNumberOfAccounts());
         assertEquals("Checking", bank.getAccount(1).getType());
+    public void testCreateUserProfileIncreasesCount() {
+        Bank bank = new Bank();
+        bank.createUserProfile("jada", "1234");
+        assertEquals(1, bank.getNumberOfUserProfiles());
+    }
+
+    @Test
+    public void testAuthenticateUserWithValidCredentials() {
+        Bank bank = new Bank();
+        bank.createUserProfile("jada", "1234");
+        assertEquals(true, bank.authenticateUser("jada", "1234"));
+    }
+
+    @Test
+    public void testAuthenticateUserRejectsBadPin() {
+        Bank bank = new Bank();
+        bank.createUserProfile("jada", "1234");
+        assertEquals(false, bank.authenticateUser("jada", "0000"));
     }
 }
