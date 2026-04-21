@@ -10,7 +10,7 @@ public class Bank {
 
     public Bank() {
         this.accounts = new ArrayList<>();
-        this.accounts.add(new BankAccount("Account " + (accounts.size() + 1), "Checking")); // start with one default account
+        this.userProfiles = new ArrayList<>();
     }
 
     public void createAdditionalAccount(String type) {
@@ -19,8 +19,6 @@ public class Bank {
         } else {
             throw new IllegalArgumentException("Invalid account type.");
         }
-        this.accounts.add(new BankAccount("Account " + (accounts.size() + 1))); // start with one default account
-        this.userProfiles = new ArrayList<>();
     }
 
     public void createUserProfile(String username, String pin) {
@@ -28,17 +26,30 @@ public class Bank {
             throw new IllegalArgumentException("Username is already taken.");
         }
         userProfiles.add(new UserProfile(username, pin));
-        createAccountForUser(username);
     }
 
-    private void createAccountForUser(String username) {
-        BankAccount account = new BankAccount("Account " + (accounts.size() + 1));
+    public void createAccountForUser(String username, String type) {
+        createAccountForUser(username, type, "Account " + (accounts.size() + 1));
+    }
+
+    public void createAccountForUser(String username, String type, String accountName) {
+        String normalizedType = type == null ? "" : type.trim().toLowerCase();
+        if ("savings".equals(normalizedType)) {
+            throw new IllegalArgumentException("Savings accounts are not available yet.");
+        }
+        if (!"checking".equals(normalizedType)) {
+            throw new IllegalArgumentException("Invalid account type.");
+        }
+        String safeName = (accountName == null || accountName.trim().isEmpty())
+                ? "Account " + (accounts.size() + 1)
+                : accountName.trim();
+        BankAccount account = new CheckingAccount(safeName);
         account.setOwner(username);
         accounts.add(account);
     }
 
     public void createAdditionalAccountForUser(String username) {
-        createAccountForUser(username);
+        createAccountForUser(username, "checking");
     }
 
     public int findFirstAccountIndexForUser(String username) {
@@ -97,7 +108,6 @@ public class Bank {
             }
         }
         return false;
-        userProfiles.add(new UserProfile(username, pin));
     }
 
     public int getNumberOfUserProfiles() {
@@ -105,7 +115,7 @@ public class Bank {
     }
 
     public void createAdditionalAccount() {
-        BankAccount account = new BankAccount("Account " + (accounts.size() + 1));
+        BankAccount account = new BankAccount("Account " + (accounts.size() + 1), "Checking");
         account.setOwner("Unassigned");
         accounts.add(account);
     }
@@ -132,18 +142,49 @@ public class Bank {
     }
 
     public String getAllAccountsSummary() {
-        StringBuilder result = new StringBuilder();
+        return getAllAccountsSummary(true);
+    }
 
+    public String getAllAccountsSummary(boolean includeOwner) {
+        StringBuilder result = new StringBuilder();
         for (BankAccount account : accounts) {
-            if (account.getStatus()) {
-                result.append(account.getName())
-                      .append(" | " + account.getType())
-                      .append(": Balance = $")
-                      .append(String.format("%.2f", account.getBalance()))
-                      .append("\n");
+            result.append(formatAccountSummary(account, includeOwner));
+        }
+        return result.toString();
+    }
+
+    public String getAccountsSummaryForUser(String username) {
+        StringBuilder result = new StringBuilder();
+        if (username == null) {
+            return result.toString();
+        }
+
+        String normalized = username.trim();
+        for (BankAccount account : accounts) {
+            if (account.getOwner().equalsIgnoreCase(normalized)) {
+                result.append(formatAccountSummary(account, false));
             }
         }
 
         return result.toString();
+    }
+
+    private String formatAccountSummary(BankAccount account, boolean includeOwner) {
+        String status = account.getStatus() ? "Open" : "Closed";
+        StringBuilder line = new StringBuilder();
+        if (includeOwner) {
+            line.append("User ")
+                .append(account.getOwner())
+                .append(" | ");
+        }
+        line.append(account.getName())
+            .append(" - ")
+            .append(account.getType())
+            .append(" - ")
+            .append(status)
+            .append(": Balance = $")
+            .append(String.format("%.2f", account.getBalance()))
+            .append("\n");
+        return line.toString();
     }
 }

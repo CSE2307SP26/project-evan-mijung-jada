@@ -144,6 +144,7 @@ public class BankAccount {
 
     public String getType() {
         return this.type;
+    }
     public String getOwner() {
         return owner;
     }

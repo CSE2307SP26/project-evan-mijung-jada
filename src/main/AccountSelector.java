@@ -28,14 +28,24 @@ public class AccountSelector {
     }
 
     public int readInt() {
-        int value = keyboardInput.nextInt();
-        keyboardInput.nextLine();
-        return value;
+        while (true) {
+            String line = keyboardInput.nextLine();
+            try {
+                return Integer.parseInt(line.trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+            }
+        }
     }
 
     public double readDouble() {
-        double value = keyboardInput.nextDouble();
-        keyboardInput.nextLine();
-        return value;
+        while (true) {
+            String line = keyboardInput.nextLine();
+            try {
+                return Double.parseDouble(line.trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+            }
+        }
     }
 }
