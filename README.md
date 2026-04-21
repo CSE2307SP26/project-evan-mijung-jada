@@ -44,8 +44,8 @@ chmod +x runApp.sh
 * A bank customer should be able to log in using their username and PIN.(Mijung)
 * A bank customer should be able to open a checking account. (Evan)
 * A bank customer should be able to open a savings account. (Evan)
-* A bank administrator should be able to freeze an account.
-* A bank administrator should be able to unfreeze an account.
+* A bank administrator should be able to set a withdrawal limit on an account. (Jada)
+* A bank customer should be able to view the withdrawal limit on their account. (Jada)
 
 ## Is there anything that you implemented but doesn't currently work?
 
