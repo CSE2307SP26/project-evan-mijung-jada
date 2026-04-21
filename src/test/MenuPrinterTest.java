@@ -20,7 +20,7 @@ public class MenuPrinterTest {
 
         try {
             MenuPrinter printer = new MenuPrinter();
-            printer.displayAdminOptions();
+            printer.displayAdminMenu();
         } finally {
             System.setOut(originalOut);
         }
@@ -37,7 +37,7 @@ public class MenuPrinterTest {
 
         try {
             MenuPrinter printer = new MenuPrinter();
-            printer.displayAdminOptions();
+            printer.displayAdminMenu();
         } finally {
             System.setOut(originalOut);
         }
