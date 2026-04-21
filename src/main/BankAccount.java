@@ -102,6 +102,10 @@ public class BankAccount {
         this.balance = amount;
     }
 
+    protected void addTransaction(String transaction) {
+        transactionHistory.add(transaction);
+    }
+
     public List<String> getTransactionHistory() {
         return this.transactionHistory;
     }

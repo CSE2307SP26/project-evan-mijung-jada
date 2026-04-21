@@ -181,8 +181,13 @@ public class MenuController {
                     }
                     break;
                 case NO_ACCOUNT_CREATE_SAVINGS:
-                    readNonBlank("Enter account name: ");
-                    System.out.println("Savings accounts are not available yet.");
+                    String savingsName = readNonBlank("Enter account name: ");
+                    int savingsIndex = createAccountForCurrentUser("savings", savingsName);
+                    if (savingsIndex >= 0) {
+                        currentAccountIndex = savingsIndex;
+                        FlowResult result = runCustomerAccountLoop();
+                        return handleFlowResult(result);
+                    }
                     break;
                 case NO_ACCOUNT_LOGOUT:
                     clearCurrentUser();
@@ -198,6 +203,10 @@ public class MenuController {
     }
 
     private boolean runAccountSelectionFlow() {
+        return runAccountSelectionFlow(false);
+    }
+
+    private boolean runAccountSelectionFlow(boolean isSwitch) {
         while (true) {
             List<Integer> indexes = bank.getAccountIndexesForUser(currentUsername);
             if (indexes.isEmpty()) {
@@ -207,11 +216,15 @@ public class MenuController {
             printer.displayAccountSelectionHeader(currentUsername);
             printer.displayAccountSelection(bank, indexes, false);
             int openNewOption = indexes.size() + 1;
-            int logoutOption = indexes.size() + 2;
+            int finalOption = indexes.size() + 2;
             System.out.println(openNewOption + ". Open a new account");
-            System.out.println(logoutOption + ". Logout");
+            if (isSwitch) {
+                System.out.println(finalOption + ". Cancel");
+            } else {
+                System.out.println(finalOption + ". Logout");
+            }
 
-            int selection = readIntInRange(1, logoutOption);
+            int selection = readIntInRange(1, finalOption);
             if (selection <= indexes.size()) {
                 currentAccountIndex = indexes.get(selection - 1);
                 FlowResult result = runCustomerAccountLoop();
@@ -233,8 +246,14 @@ public class MenuController {
                 continue;
             }
 
-            clearCurrentUser();
-            return true;
+            if (isSwitch) {
+                // Cancel, go back to current account
+                FlowResult result = runCustomerAccountLoop();
+                return handleFlowResult(result);
+            } else {
+                clearCurrentUser();
+                return true;
+            }
         }
     }
 
@@ -331,10 +350,14 @@ public class MenuController {
     }
 
     private boolean handleFlowResult(FlowResult result) {
-        if (result == FlowResult.EXIT_APP) {
-            return false;
+        switch (result) {
+            case EXIT_APP:
+                return false;
+            case SWITCH_ACCOUNT:
+                return runAccountSelectionFlow(true);
+            default:
+                return true;
         }
-        return true;
     }
 
     private boolean ensureCurrentAccount() {
@@ -370,8 +393,15 @@ public class MenuController {
         }
 
         if (selection == 2) {
-            readNonBlank("Enter account name: ");
-            System.out.println("Savings accounts are not available yet.");
+            String savingsName = readNonBlank("Enter account name: ");
+            int newIndex = createAccountForCurrentUser("savings", savingsName);
+            if (newIndex < 0) {
+                return null;
+            }
+
+            if (readYesNo("Switch to new account? (y/n): ")) {
+                return newIndex;
+            }
             return null;
         }
 
@@ -402,7 +432,7 @@ public class MenuController {
         return indexes.get(indexes.size() - 1);
     }
 
-    private int getAccountSelection(List<Integer> indexes, boolean showOwner) {
+    public int getAccountSelection(List<Integer> indexes, boolean showOwner) {
         printer.displayAccountSelection(bank, indexes, showOwner);
         if (indexes.isEmpty()) {
             return -1;
