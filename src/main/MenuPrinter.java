@@ -23,12 +23,13 @@ public class MenuPrinter {
         if (showAdminOptions) {
             System.out.println("13. Add interest payment to an account");
             System.out.println("14. Collect fee from an account");
+            System.out.println("15. Set withdrawal limit on an account");
         }
         System.out.println("16. Create a user profile");
     }
 
     public void displayCustomerOptions(String username, String accountName) {
-        printHeader("Welcome " + username + ", you are at " + accountName + "");
+        printHeader("Welcome " + username + ", you are at " + accountName);
         System.out.println("1. Make a deposit");
         System.out.println("2. Withdraw from an account");
         System.out.println("3. Check account balance");
@@ -48,7 +49,10 @@ public class MenuPrinter {
         printHeader("Welcome to the 237 Bank App!");
         System.out.println("1. Add interest payment to an account");
         System.out.println("2. Collect fee from an account");
-        System.out.println("3. Exit admin mode");
+        System.out.println("3. Set withdrawal limit on an account");
+        System.out.println("4. View all accounts");
+        System.out.println("5. Search accounts by username");
+        System.out.println("6. Exit admin mode");
     }
 
     public void displayLoginOptions() {
@@ -78,19 +82,24 @@ public class MenuPrinter {
         displayAccountSelection(bank, indexes, showOwner);
     }
 
-    public void displayAccountSelection(Bank bank, java.util.List<Integer> indexes, boolean showOwner) {
+    public void displayAccountSelection(
+        Bank bank,
+        java.util.List<Integer> indexes,
+        boolean showOwner
+    ) {
         System.out.println("Select an account:");
-        for (int i = 0; i < max; i++) {
-            System.out.println((i + 1) + ": " + bank.getAccount(i).getName() + " | " + bank.getAccount(i).getType());
         if (indexes.isEmpty()) {
             System.out.println("No accounts available.");
             return;
         }
+
         for (int i = 0; i < indexes.size(); i++) {
             BankAccount account = bank.getAccount(indexes.get(i));
             if (showOwner) {
-                System.out.println((i + 1) + ": User " + account.getOwner()
-                        + " | Account " + account.getName());
+                System.out.println(
+                    (i + 1) + ": User " + account.getOwner()
+                        + " | Account " + account.getName()
+                );
             } else {
                 System.out.println((i + 1) + ": " + account.getName());
             }

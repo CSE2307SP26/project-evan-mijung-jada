@@ -131,6 +131,11 @@ public class Bank {
         account.collectFee(amount);
     }
 
+    public void setWithdrawalLimit(int index, double limit) {
+        BankAccount account = getAccount(index);
+        account.setWithdrawalLimit(limit);
+    }
+
     public String getAllAccountsSummary() {
         StringBuilder result = new StringBuilder();
 

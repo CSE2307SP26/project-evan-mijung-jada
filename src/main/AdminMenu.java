@@ -7,6 +7,7 @@ public class AdminMenu {
     private static final int ADMIN_MODE_SELECTION = 13;
     private static final int INTEREST_PAYMENT_SELECTION = 14;
     private static final int FEE_COLLECTION_SELECTION = 15;
+    private static final int SET_WITHDRAWAL_LIMIT_SELECTION = 16;
 
     private final Bank bank;
     private final Scanner keyboardInput;
@@ -37,6 +38,11 @@ public class AdminMenu {
             case FEE_COLLECTION_SELECTION:
                 if (ensureAdminAccess()) {
                     collectFee();
+                }
+                return true;
+            case SET_WITHDRAWAL_LIMIT_SELECTION:
+                if (ensureAdminAccess()) {
+                    setWithdrawalLimit();
                 }
                 return true;
             default:
@@ -82,6 +88,13 @@ public class AdminMenu {
         double feeAmount = readPositiveAmount("Enter fee amount: ");
         bank.collectFee(accountIndex, feeAmount);
         System.out.println("Fee collected.");
+    }
+
+    private void setWithdrawalLimit() {
+        int accountIndex = accountSelector.selectAccount();
+        double limit = readPositiveAmount("Enter withdrawal limit: ");
+        bank.setWithdrawalLimit(accountIndex, limit);
+        System.out.println("Withdrawal limit set successfully.");
     }
 
     private double readPositiveAmount(String prompt) {
