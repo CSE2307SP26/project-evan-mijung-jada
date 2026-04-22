@@ -64,6 +64,9 @@ public class BankTest {
         bank.createAdditionalAccount("checking");
         assertEquals(2, bank.getNumberOfAccounts());
         assertEquals("Checking", bank.getAccount(1).getType());
+    }
+    
+    @Test
     public void testCreateUserProfileIncreasesCount() {
         Bank bank = new Bank();
         bank.createUserProfile("jada", "1234");

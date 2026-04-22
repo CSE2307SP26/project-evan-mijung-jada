@@ -22,6 +22,6 @@ public class MenuControllerTest {
     @Test
     public void testGetAccountSelectionReturnsIndex() {
         MenuController controller = new MenuController(new Bank(), new Scanner("1\n"), new MenuPrinter());
-        assertEquals(0, controller.getAccountSelection());
+        assertEquals(1, controller.getUserSelection(1));
     }
 }

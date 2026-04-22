@@ -16,6 +16,8 @@ public class Bank {
     public void createAdditionalAccount(String type) {
         if(type.equals("checking")) {
             accounts.add(new CheckingAccount("Account " + (accounts.size() + 1)));
+        } else if(type.equals("savings")) {
+            accounts.add(new SavingsAccount("Account " + (accounts.size() + 1)));
         } else {
             throw new IllegalArgumentException("Invalid account type.");
         }
@@ -34,16 +36,18 @@ public class Bank {
 
     public void createAccountForUser(String username, String type, String accountName) {
         String normalizedType = type == null ? "" : type.trim().toLowerCase();
-        if ("savings".equals(normalizedType)) {
-            throw new IllegalArgumentException("Savings accounts are not available yet.");
-        }
-        if (!"checking".equals(normalizedType)) {
+        if (!"checking".equals(normalizedType) && !"savings".equals(normalizedType)) {
             throw new IllegalArgumentException("Invalid account type.");
         }
         String safeName = (accountName == null || accountName.trim().isEmpty())
                 ? "Account " + (accounts.size() + 1)
                 : accountName.trim();
-        BankAccount account = new CheckingAccount(safeName);
+        BankAccount account;
+        if ("savings".equals(normalizedType)) {
+            account = new SavingsAccount(safeName);
+        } else {
+            account = new CheckingAccount(safeName);
+        }
         account.setOwner(username);
         accounts.add(account);
     }
