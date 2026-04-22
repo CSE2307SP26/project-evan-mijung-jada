@@ -12,7 +12,6 @@ public class BankAccount {
     private boolean open;
     private String type;
     private double withdrawalLimit;
-    return this.withdrawalLimit;
 
     public BankAccount() {
         this("Account", "Checking");
@@ -151,6 +150,13 @@ public class BankAccount {
 
     public String getType() {
         return this.type;
+    }
+    public double getWithdrawalLimit() {
+        return this.withdrawalLimit;
+    }
+        public void setWithdrawalLimit(double withdrawalLimit) {
+    this.withdrawalLimit = withdrawalLimit;
+
     }
     public String getOwner() {
         return owner;
