@@ -277,12 +277,15 @@ public class MenuController {
                 case 3:
                     checkBalance();
                     break;
-
                 case 4:
+                    performViewWithdrawalLimit();
+                     break;
+              
+                case 5:
                     clearCurrentUser();
                     return FlowResult.CONTINUE_LOGIN;
 
-                case 5:
+                case 6:
                     System.out.println("Exiting app...");
                     return FlowResult.EXIT_APP;
 
@@ -481,6 +484,8 @@ public class MenuController {
         }
 
         System.out.println("Your current balance is " + selectedAccount.getBalance());
+        System.out.println("Your withdrawal limit is $" + selectedAccount.getWithdrawalLimit());
+        
         double withdrawAmount = readPositiveAmount("Enter an amount: ");
 
         try {
@@ -493,7 +498,17 @@ public class MenuController {
             System.out.println("Withdrawal failed: " + e.getMessage());
         }
     }
+    private void performViewWithdrawalLimit() {
+        BankAccount selectedAccount = getCurrentAccount();
+        if (selectedAccount == null) {
+            return;
+        }
 
+         System.out.println(
+            "Your withdrawal limit is $"
+            + String.format("%.2f", selectedAccount.getWithdrawalLimit())
+     );
+}
     private void checkBalance() {
         BankAccount selectedAccount = getCurrentAccount();
         if (selectedAccount == null) {

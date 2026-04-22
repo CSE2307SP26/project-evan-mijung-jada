@@ -24,7 +24,7 @@ public class BankAccount {
         this.name = name;
         this.type = type;
         this.owner = "Unassigned";
-        this.withdrawalLimit = Double.MAX_VALUE;
+        this.withdrawalLimit = 20.0;
     }
 
     public void deposit(double amount) {
