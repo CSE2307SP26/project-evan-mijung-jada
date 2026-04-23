@@ -13,12 +13,13 @@ public class MainMenu {
     }
 
     public void displayOptions() {
-        printer.displayOptions(false);
+        printer.displayLoginOptions();
     }
 
     public void run() {
-        controller.run();
+        controller.runLoginLoop();
     }
+
 
     public static void main(String[] args) {
         MainMenu bankApp = new MainMenu();

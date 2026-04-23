@@ -1,293 +1,590 @@
 package main;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class MenuController {
 
-    private static final int DEPOSIT_SELECTION = 1;
-    private static final int WITHDRAW_SELECTION = 2;
-    private static final int CHECK_BALANCE_SELECTION = 3;
-    private static final int VIEW_HISTORY_SELECTION = 4;
-    private static final int CREATE_ACCOUNT_SELECTION = 5;
-    private static final int CLOSE_ACCOUNT_SELECTION = 6;
-    private static final int TRANSFER_SELECTION = 7;
-    private static final int RENAME_SELECTION = 8;
-    private static final int VIEW_ACCOUNTS_SELECTION = 9;
-    private static final int CHECK_ACCOUNT_STATUS_SELECTION = 10;
-    private static final int REOPEN_ACCOUNT_SELECTION = 11;
-    private static final int EXIT_SELECTION = 12;
-    private static final int ADMIN_MODE_SELECTION = 13;
-    private static final int INTEREST_PAYMENT_SELECTION = 14;
-    private static final int FEE_COLLECTION_SELECTION = 15;
+    private enum FlowResult {
+        CONTINUE_LOGIN,
+        EXIT_APP,
+        SWITCH_ACCOUNT
+    }
 
-    private static final int MAX_SELECTION = 15;
+    private static final int LOGIN_CREATE_PROFILE = 1;
+    private static final int LOGIN_CUSTOMER = 2;
+    private static final int LOGIN_ADMIN = 3;
+    private static final int LOGIN_EXIT = 4;
+
+    private static final int NO_ACCOUNT_CREATE_CHECKING = 1;
+    private static final int NO_ACCOUNT_CREATE_SAVINGS = 2;
+    private static final int NO_ACCOUNT_LOGOUT = 3;
+    private static final int NO_ACCOUNT_EXIT = 4;
+
+    private static final int CUSTOMER_DEPOSIT = 1;
+    private static final int CUSTOMER_WITHDRAW = 2;
+    private static final int CUSTOMER_CHECK_BALANCE = 3;
+    private static final int CUSTOMER_VIEW_LIMIT = 4;  
+    private static final int CUSTOMER_VIEW_HISTORY = 5;
+    private static final int CUSTOMER_TRANSFER = 6;
+    private static final int CUSTOMER_RENAME = 7;
+    private static final int CUSTOMER_CLOSE = 8;
+    private static final int CUSTOMER_REOPEN = 9;
+    private static final int CUSTOMER_STATUS = 10;
+    private static final int CUSTOMER_OPEN_NEW = 11;
+    private static final int CUSTOMER_VIEW_ALL = 12;
+    private static final int CUSTOMER_SWITCH = 13;
+    private static final int CUSTOMER_LOGOUT = 14;
+    private static final int CUSTOMER_EXIT = 15;
+
+    private static final int ADMIN_INTEREST = 1;
+    private static final int ADMIN_FEE = 2;
+    private static final int ADMIN_VIEW_ALL = 3;
+    private static final int ADMIN_SEARCH = 4;
+    private static final int ADMIN_EXIT = 5;
 
     private final Bank bank;
     private final Scanner keyboardInput;
     private final MenuPrinter printer;
-    private boolean adminMode;
+    private String currentUsername;
+    private int currentAccountIndex;
 
     public MenuController(Bank bank, Scanner keyboardInput, MenuPrinter printer) {
         this.bank = bank;
         this.keyboardInput = keyboardInput;
         this.printer = printer;
-        this.adminMode = false;
+        this.currentUsername = null;
+        this.currentAccountIndex = -1;
     }
 
-    public void run() {
-        int selection = -1;
-        while (selection != EXIT_SELECTION) {
-            printer.displayOptions(adminMode);
-            selection = getUserSelection(MAX_SELECTION);
-            processInput(selection);
-            System.out.println();
+    public void runLoginLoop() {
+        boolean keepRunning = true;
+        while (keepRunning) {
+            printer.displayLoginOptions();
+            int selection = readIntInRange(LOGIN_CREATE_PROFILE, LOGIN_EXIT);
+            switch (selection) {
+                case LOGIN_CREATE_PROFILE:
+                    keepRunning = createUserProfileFlow();
+                    break;
+                case LOGIN_CUSTOMER:
+                    keepRunning = handleCustomerLogin();
+                    break;
+                case LOGIN_ADMIN:
+                    keepRunning = handleAdminLogin();
+                    break;
+                case LOGIN_EXIT:
+                    System.out.println("Exiting app...");
+                    keepRunning = false;
+                    break;
+                default:
+                    System.out.println("Invalid selection.");
+                    break;
+            }
         }
     }
 
     public int getUserSelection(int max) {
-        int selection = -1;
-        while (selection < 1 || selection > max) {
-            System.out.print("Please make a selection: ");
-            selection = keyboardInput.nextInt();
-            keyboardInput.nextLine();
-        }
-        return selection;
+        return readIntInRange(1, max);
     }
 
-    public int getAccountSelection() {
-        int max = bank.getNumberOfAccounts();
-
-        printer.displayAccountSelection(bank);
-
-        int selection = -1;
-        while (selection < 1 || selection > max) {
-            System.out.print("Choose account number: ");
-            selection = keyboardInput.nextInt();
-            keyboardInput.nextLine();
-        }
-
-        return selection - 1;
+    public boolean authenticateUser(String username, String pin) {
+        return bank.authenticateUser(username, pin);
     }
 
-    public void processInput(int selection) {
-        switch (selection) {
-            case DEPOSIT_SELECTION:
-                performDeposit();
-                break;
-            case WITHDRAW_SELECTION:
-                performWithdraw();
-                break;
-            case CHECK_BALANCE_SELECTION:
-                checkBalance();
-                break;
-            case VIEW_HISTORY_SELECTION:
-                viewTransactionHistory();
-                break;
-            case CREATE_ACCOUNT_SELECTION:
-                createAdditionalAccount();
-                break;
-            case CLOSE_ACCOUNT_SELECTION:
-                closeAccount();
-                break;
-            case TRANSFER_SELECTION:
-                performTransfer();
-                break;
-            case CHECK_ACCOUNT_STATUS_SELECTION:
-                checkAccountStatus();
-                break;
-            case REOPEN_ACCOUNT_SELECTION:
-                reopenAccount();
-                break;
-            case EXIT_SELECTION:
-                System.out.println("Exiting app...");
-                break;
-            case RENAME_SELECTION:
-                renameAccount();
-                break;
-            case VIEW_ACCOUNTS_SELECTION:
-                viewAllAccounts();
-                break;
-            case ADMIN_MODE_SELECTION:
-                toggleAdminMode();
-                break;
-            case INTEREST_PAYMENT_SELECTION:
-                if (ensureAdminAccess()) {
-                    addInterestPayment();
-                }
-                break;
-            case FEE_COLLECTION_SELECTION:
-                if (ensureAdminAccess()) {
-                    collectFee();
-                }
-                break;
-            default:
-                System.out.println("Invalid selection.");
-                break;
-        }
+    public boolean isUsernameTaken(String username) {
+        return bank.isUsernameTaken(username);
     }
 
-    private boolean ensureAdminAccess() {
-        if (adminMode) {
+    public boolean authenticateAdmin(String passcode) {
+        return "0000".equals(passcode);
+    }
+
+    public void createUserProfile() {
+        createUserProfileFlow();
+    }
+
+    public String promptLine(String prompt) {
+        System.out.print(prompt);
+        return keyboardInput.nextLine();
+    }
+
+    private boolean createUserProfileFlow() {
+        String username = null;
+        while (true) {
+            username = readNonBlank("Enter a username: ");
+            String pin = readPin();
+            try {
+                bank.createUserProfile(username, pin);
+                System.out.println("User profile created.");
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        this.currentUsername = username;
+        this.currentAccountIndex = -1;
+        return runNoAccountFlow();
+    }
+
+    private boolean handleCustomerLogin() {
+        String username = promptLine("Enter username: ");
+        String pin = promptLine("Enter PIN: ");
+
+        if (!isUsernameTaken(username)) {
+            System.out.println("Username not found.");
             return true;
         }
 
-        System.out.println("Admin access required. Select option 13 to enable admin mode.");
-        return false;
-    }
-
-    private void toggleAdminMode() {
-        if (adminMode) {
-            adminMode = false;
-            System.out.println("Admin mode disabled.");
-            return;
+        if (!authenticateUser(username, pin)) {
+            System.out.println("Wrong PIN.");
+            return true;
         }
 
-        System.out.print("Enter passcode (0000): ");
-        String passcode = keyboardInput.nextLine();
-        if ("0000".equals(passcode)) {
-            adminMode = true;
-            System.out.println("Admin mode enabled.");
-        } else {
-            System.out.println("Invalid passcode.");
+        this.currentUsername = username.trim();
+        this.currentAccountIndex = -1;
+
+        List<Integer> indexes = bank.getAccountIndexesForUser(currentUsername);
+        if (indexes.isEmpty()) {
+            return runNoAccountFlow();
         }
+        if (indexes.size() == 1) {
+            currentAccountIndex = indexes.get(0);
+            FlowResult result = runCustomerAccountLoop();
+            return handleFlowResult(result);
+        }
+
+        return runAccountSelectionFlow();
     }
 
-    public void performDeposit() {
-        int accountIndex = getAccountSelection();
-        BankAccount selectedAccount = bank.getAccount(accountIndex);
+    private boolean handleAdminLogin() {
+        String passcode = promptLine("Enter admin passcode: ");
+        if (authenticateAdmin(passcode)) {
+            return runAdminLoop();
+        }
+        System.out.println("Invalid passcode.");
+        return true;
+    }
 
+    private boolean runNoAccountFlow() {
         while (true) {
-            System.out.print("How much would you like to deposit: ");
-            double depositAmount = keyboardInput.nextDouble();
-            keyboardInput.nextLine();
+            printer.displayNoAccountOptions(currentUsername);
+            int selection = readIntInRange(NO_ACCOUNT_CREATE_CHECKING, NO_ACCOUNT_EXIT);
+            switch (selection) {
+                case NO_ACCOUNT_CREATE_CHECKING:
+                    String checkingName = readNonBlank("Enter account name: ");
+                    int newIndex = createAccountForCurrentUser("checking", checkingName);
+                    if (newIndex >= 0) {
+                        currentAccountIndex = newIndex;
+                        FlowResult result = runCustomerAccountLoop();
+                        return handleFlowResult(result);
+                    }
+                    break;
+                case NO_ACCOUNT_CREATE_SAVINGS:
+                    String savingsName = readNonBlank("Enter account name: ");
+                    int savingsIndex = createAccountForCurrentUser("savings", savingsName);
+                    if (savingsIndex >= 0) {
+                        currentAccountIndex = savingsIndex;
+                        FlowResult result = runCustomerAccountLoop();
+                        return handleFlowResult(result);
+                    }
+                    break;
+                case NO_ACCOUNT_LOGOUT:
+                    clearCurrentUser();
+                    return true;
+                case NO_ACCOUNT_EXIT:
+                    System.out.println("Exiting app...");
+                    return false;
+                default:
+                    System.out.println("Invalid selection.");
+                    break;
+            }
+        }
+    }
 
-            if (depositAmount <= 0) {
-                System.out.println("Deposit amount must be greater than 0.");
+    private boolean runAccountSelectionFlow() {
+        return runAccountSelectionFlow(false);
+    }
+
+    private boolean runAccountSelectionFlow(boolean isSwitch) {
+        while (true) {
+            List<Integer> indexes = bank.getAccountIndexesForUser(currentUsername);
+            if (indexes.isEmpty()) {
+                return runNoAccountFlow();
+            }
+
+            printer.displayAccountSelectionHeader(currentUsername);
+            printer.displayAccountSelection(bank, indexes, false);
+            int openNewOption = indexes.size() + 1;
+            int finalOption = indexes.size() + 2;
+            System.out.println(openNewOption + ". Open a new account");
+            if (isSwitch) {
+                System.out.println(finalOption + ". Cancel");
+            } else {
+                System.out.println(finalOption + ". Logout");
+            }
+
+            int selection = readIntInRange(1, finalOption);
+            if (selection <= indexes.size()) {
+                currentAccountIndex = indexes.get(selection - 1);
+                FlowResult result = runCustomerAccountLoop();
+                if (result == FlowResult.SWITCH_ACCOUNT) {
+                    continue;
+                }
+                return handleFlowResult(result);
+            }
+            if (selection == openNewOption) {
+                Integer newIndex = openNewAccountFlow();
+                if (newIndex != null) {
+                    currentAccountIndex = newIndex;
+                    FlowResult result = runCustomerAccountLoop();
+                    if (result == FlowResult.SWITCH_ACCOUNT) {
+                        continue;
+                    }
+                    return handleFlowResult(result);
+                }
                 continue;
             }
 
-            try {
-                selectedAccount.deposit(depositAmount);
-                System.out.println("Deposit complete.");
-                break;
-            } catch (IllegalArgumentException e) {
-                System.out.println("Deposit failed: " + e.getMessage());
+            if (isSwitch) {
+                // Cancel, go back to current account
+                FlowResult result = runCustomerAccountLoop();
+                return handleFlowResult(result);
+            } else {
+                clearCurrentUser();
+                return true;
             }
         }
     }
 
-    public void performWithdraw() {
-        int accountIndex = getAccountSelection();
-        BankAccount selectedAccount = bank.getAccount(accountIndex);
-
-        double withdrawAmount = -1;
-        while (withdrawAmount < 0) {
-            System.out.println("How much would you like to withdraw? Your current balance is "
-                    + selectedAccount.getBalance());
-            System.out.print("Enter an amount: ");
-            withdrawAmount = keyboardInput.nextDouble();
+    private FlowResult runCustomerAccountLoop() {
+        if (!ensureCurrentAccount()) {
+            return FlowResult.CONTINUE_LOGIN;
         }
+
+        while (true) {
+            BankAccount currentAccount = getCurrentAccount();
+            printer.displayCustomerAccountMenu(currentUsername, currentAccount.getName());
+            int selection = readIntInRange(CUSTOMER_DEPOSIT, CUSTOMER_EXIT);
+
+            switch (selection) {
+    case CUSTOMER_DEPOSIT:
+        performDeposit();
+        break;
+    case CUSTOMER_WITHDRAW:
+        performWithdraw();
+        break;
+    case CUSTOMER_CHECK_BALANCE:
+        checkBalance();
+        break;
+    case CUSTOMER_VIEW_LIMIT:
+        performViewWithdrawalLimit();
+        break;
+    case CUSTOMER_VIEW_HISTORY:
+        viewTransactionHistory();
+        break;
+    case CUSTOMER_TRANSFER:
+        performTransfer();
+        break;
+    case CUSTOMER_RENAME:
+        renameAccount();
+        break;
+    case CUSTOMER_CLOSE:
+        closeAccount();
+        break;
+    case CUSTOMER_REOPEN:
+        reopenAccount();
+        break;
+    case CUSTOMER_STATUS:
+        checkAccountStatus();
+        break;
+    case CUSTOMER_OPEN_NEW:
+        Integer newIndex = openNewAccountFlow();
+        if (newIndex != null) {
+            currentAccountIndex = newIndex;
+        }
+        break;
+    case CUSTOMER_VIEW_ALL:
+        viewAllAccounts();
+        break;
+    case CUSTOMER_SWITCH:
+        return FlowResult.SWITCH_ACCOUNT;
+    case CUSTOMER_LOGOUT:
+        clearCurrentUser();
+        return FlowResult.CONTINUE_LOGIN;
+    case CUSTOMER_EXIT:
+        System.out.println("Exiting app...");
+        return FlowResult.EXIT_APP;
+    default:
+        System.out.println("Invalid selection.");
+        break;
+}
+    System.out.println();
+         }
+    }
+
+    private boolean runAdminLoop() {
+        while (true) {
+            printer.displayAdminMenu();
+            int selection = readIntInRange(ADMIN_INTEREST, ADMIN_EXIT);
+            switch (selection) {
+                case ADMIN_INTEREST:
+                    addInterestPayment();
+                    break;
+                case ADMIN_FEE:
+                    collectFee();
+                    break;
+                case ADMIN_VIEW_ALL:
+                    System.out.println("\nAll Accounts Summary:");
+                    System.out.println(bank.getAllAccountsSummary(true));
+                    break;
+                case ADMIN_SEARCH:
+                    searchAccountsByUsername();
+                    break;
+                case ADMIN_EXIT:
+                    System.out.println("Exiting admin mode...");
+                    return true;
+                default:
+                    System.out.println("Invalid selection.");
+                    break;
+            }
+            System.out.println();
+        }
+    }
+
+    private boolean handleFlowResult(FlowResult result) {
+        switch (result) {
+            case EXIT_APP:
+                return false;
+            case SWITCH_ACCOUNT:
+                return runAccountSelectionFlow(true);
+            default:
+                return true;
+        }
+    }
+
+    private boolean ensureCurrentAccount() {
+        if (currentUsername == null) {
+            return false;
+        }
+        if (currentAccountIndex < 0) {
+            return false;
+        }
+        return true;
+    }
+
+    private BankAccount getCurrentAccount() {
+        if (!ensureCurrentAccount()) {
+            return null;
+        }
+        return bank.getAccount(currentAccountIndex);
+    }
+
+    private void clearCurrentUser() {
+        currentUsername = null;
+        currentAccountIndex = -1;
+    }
+
+    private Integer openNewAccountFlow() {
+        System.out.println("1. Open checking account");
+        System.out.println("2. Open savings account");
+        System.out.println("3. Cancel");
+
+        int selection = readIntInRange(1, 3);
+        if (selection == 3) {
+            return null;
+        }
+
+        if (selection == 2) {
+            String savingsName = readNonBlank("Enter account name: ");
+            int newIndex = createAccountForCurrentUser("savings", savingsName);
+            if (newIndex < 0) {
+                return null;
+            }
+
+            if (readYesNo("Switch to new account? (y/n): ")) {
+                return newIndex;
+            }
+            return null;
+        }
+
+        String checkingName = readNonBlank("Enter account name: ");
+        int newIndex = createAccountForCurrentUser("checking", checkingName);
+        if (newIndex < 0) {
+            return null;
+        }
+
+        if (readYesNo("Switch to new account? (y/n): ")) {
+            return newIndex;
+        }
+        return null;
+    }
+
+    private int createAccountForCurrentUser(String type, String accountName) {
+        try {
+            bank.createAccountForUser(currentUsername, type, accountName);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            return -1;
+        }
+
+        List<Integer> indexes = bank.getAccountIndexesForUser(currentUsername);
+        if (indexes.isEmpty()) {
+            return -1;
+        }
+        return indexes.get(indexes.size() - 1);
+    }
+
+    public int getAccountSelection(List<Integer> indexes, boolean showOwner) {
+        printer.displayAccountSelection(bank, indexes, showOwner);
+        if (indexes.isEmpty()) {
+            return -1;
+        }
+
+        int selection = readIntInRange(1, indexes.size());
+        return indexes.get(selection - 1);
+    }
+
+    private int getAccountSelection(boolean showOwner) {
+        List<Integer> indexes = new ArrayList<>();
+        for (int i = 0; i < bank.getNumberOfAccounts(); i++) {
+            indexes.add(i);
+        }
+        return getAccountSelection(indexes, showOwner);
+    }
+
+    private void performDeposit() {
+        BankAccount selectedAccount = getCurrentAccount();
+        if (selectedAccount == null) {
+            return;
+        }
+
+        double depositAmount = readPositiveAmount("How much would you like to deposit: ");
+        try {
+            selectedAccount.deposit(depositAmount);
+            System.out.println("Deposit complete. New balance: $" + String.format("%.2f", selectedAccount.getBalance()));
+        } catch (IllegalArgumentException e) {
+            System.out.println("Deposit failed: " + e.getMessage());
+        }
+    }
+
+    private void performWithdraw() {
+        BankAccount selectedAccount = getCurrentAccount();
+        if (selectedAccount == null) {
+            return;
+        }
+
+        System.out.println("Your current balance is " + selectedAccount.getBalance());
+        System.out.println("Your withdrawal limit is $" + selectedAccount.getWithdrawalLimit());
+        
+        double withdrawAmount = readPositiveAmount("Enter an amount: ");
 
         try {
             selectedAccount.withdraw(withdrawAmount);
-            System.out.println("Withdrawal complete.");
+            System.out.println("Withdrawal complete. New balance: $" + String.format("%.2f", selectedAccount.getBalance()));
         } catch (IllegalArgumentException e) {
             System.out.println("Withdrawal failed: " + e.getMessage());
         }
     }
+    private void performViewWithdrawalLimit() {
+        BankAccount selectedAccount = getCurrentAccount();
+        if (selectedAccount == null) {
+            return;
+        }
 
-    public void checkBalance() {
-        int accountIndex = getAccountSelection();
-        BankAccount selectedAccount = bank.getAccount(accountIndex);
+         System.out.println(
+            "Your withdrawal limit is $"
+            + String.format("%.2f", selectedAccount.getWithdrawalLimit())
+     );
+}
+    private void checkBalance() {
+        BankAccount selectedAccount = getCurrentAccount();
+        if (selectedAccount == null) {
+            return;
+        }
 
-        System.out.println("Current balance: $" + selectedAccount.getBalance());
+        System.out.println("Current balance: $" + String.format("%.2f", selectedAccount.getBalance()));
     }
 
-    public void viewTransactionHistory() {
-        int accountIndex = getAccountSelection();
-        BankAccount selectedAccount = bank.getAccount(accountIndex);
+    private void viewTransactionHistory() {
+        BankAccount selectedAccount = getCurrentAccount();
+        if (selectedAccount == null) {
+            return;
+        }
 
         System.out.println("\nTransaction History:");
         System.out.println(selectedAccount.getTransactionHistoryText());
     }
 
-    public void createAdditionalAccount() {
-        bank.createAdditionalAccount();
-        System.out.println("New account created successfully.");
-        System.out.println("Total accounts: " + bank.getNumberOfAccounts());
+    private void performTransfer() {
+        BankAccount fromAccount = getCurrentAccount();
+        if (fromAccount == null) {
+            return;
+        }
+
+        List<Integer> indexes = bank.getAccountIndexesForUser(currentUsername);
+        if (indexes.size() <= 1) {
+            System.out.println("No other accounts available.");
+            return;
+        }
+
+        List<Integer> targetIndexes = new ArrayList<>();
+        for (int index : indexes) {
+            if (index != currentAccountIndex) {
+                targetIndexes.add(index);
+            }
+        }
+
+        System.out.println("Which account would you like to transfer money to?");
+        int targetIndex = getAccountSelection(targetIndexes, false);
+        if (targetIndex < 0) {
+            return;
+        }
+
+        BankAccount accountToTransferTo = bank.getAccount(targetIndex);
+        double transferAmount = readPositiveAmount("Enter an amount: ");
+
+        try {
+            fromAccount.transferMoney(accountToTransferTo, transferAmount);
+            System.out.println("Transfer complete.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Transfer failed: " + e.getMessage());
+        }
     }
 
-    public void closeAccount() {
-        int accountIndex = getAccountSelection();
-        BankAccount selectedAccount = bank.getAccount(accountIndex);
+    private void renameAccount() {
+        BankAccount selectedAccount = getCurrentAccount();
+        if (selectedAccount == null) {
+            return;
+        }
+
+        String newName = readNonBlank("Enter your new account name: ");
+        selectedAccount.rename(newName);
+        System.out.println("Account renamed.");
+    }
+
+    private void closeAccount() {
+        BankAccount selectedAccount = getCurrentAccount();
+        if (selectedAccount == null) {
+            return;
+        }
+
+        if (!readYesNo("Are you sure you want to close this account? (y/n): ")) {
+            return;
+        }
 
         selectedAccount.closeAccount();
         System.out.println("Account closed.");
     }
 
-    public void performTransfer() {
-        int accountIndex = getAccountSelection();
-        BankAccount selectedAccount = bank.getAccount(accountIndex);
-
-        System.out.println("Which account would you like to transfer money to?");
-        int accountToTransferToIndex = getAccountSelection();
-        BankAccount accountToTransferTo = bank.getAccount(accountToTransferToIndex);
-
-        double transferAmount = -1;
-        while (transferAmount < 0) {
-            System.out.println("How much would you like to transfer? Your current balance is "
-                    + selectedAccount.getBalance());
-            System.out.print("Enter an amount: ");
-            transferAmount = keyboardInput.nextDouble();
+    private void reopenAccount() {
+        BankAccount selectedAccount = getCurrentAccount();
+        if (selectedAccount == null) {
+            return;
         }
 
-        selectedAccount.transferMoney(accountToTransferTo, transferAmount);
-        System.out.println("Transfer complete");
-    }
-
-    public void addInterestPayment() {
-        int accountIndex = getAccountSelection();
-
-        double interestAmount = -1;
-        while (interestAmount <= 0) {
-            System.out.print("Enter interest payment amount: ");
-            interestAmount = keyboardInput.nextDouble();
-            keyboardInput.nextLine();
-        }
-
-        bank.addInterestPayment(accountIndex, interestAmount);
-        System.out.println("Interest payment applied.");
-    }
-
-    public void collectFee() {
-        int accountIndex = getAccountSelection();
-
-        double feeAmount = -1;
-        while (feeAmount <= 0) {
-            System.out.print("Enter fee amount: ");
-            feeAmount = keyboardInput.nextDouble();
-            keyboardInput.nextLine();
-        }
-
-        bank.collectFee(accountIndex, feeAmount);
-        System.out.println("Fee collected.");
-    }
-
-    public void checkAccountStatus() {
-        int accountIndex = getAccountSelection();
-        BankAccount selectedAccount = bank.getAccount(accountIndex);
-
-        boolean isOpen = selectedAccount.getStatus();
-        System.out.println("Account status: " + (isOpen ? "Open" : "Closed"));
-    }
-
-    public void reopenAccount() {
-        int accountIndex = getAccountSelection();
-        BankAccount selectedAccount = bank.getAccount(accountIndex);
-
-        boolean isOpen = selectedAccount.getStatus();
-
-        if (isOpen) {
+        if (selectedAccount.getStatus()) {
             System.out.println("Account is already open.");
             return;
         }
@@ -296,17 +593,128 @@ public class MenuController {
         System.out.println("Account reopened successfully.");
     }
 
-    public void renameAccount() {
-        int accountIndex = getAccountSelection();
-        BankAccount selectedAccount = bank.getAccount(accountIndex);
+    private void checkAccountStatus() {
+        BankAccount selectedAccount = getCurrentAccount();
+        if (selectedAccount == null) {
+            return;
+        }
 
-        System.out.print("Enter your new account name: ");
-        String newName = keyboardInput.nextLine();
-        selectedAccount.rename(newName);
+        boolean isOpen = selectedAccount.getStatus();
+        System.out.println("Account status: " + (isOpen ? "Open" : "Closed"));
     }
 
-    public void viewAllAccounts() {
+    private void viewAllAccounts() {
         System.out.println("\nAll Accounts Summary:");
-        System.out.println(bank.getAllAccountsSummary());
+        String summary = bank.getAccountsSummaryForUser(currentUsername);
+        if (summary.trim().isEmpty()) {
+            System.out.println("No accounts found.");
+            return;
+        }
+        System.out.println(summary);
+    }
+
+    private void addInterestPayment() {
+        int accountIndex = getAccountSelection(true);
+        if (accountIndex < 0) {
+            return;
+        }
+
+        double interestAmount = readPositiveAmount("Enter interest payment amount: ");
+        bank.addInterestPayment(accountIndex, interestAmount);
+        System.out.println("Interest payment applied.");
+    }
+
+    private void collectFee() {
+        int accountIndex = getAccountSelection(true);
+        if (accountIndex < 0) {
+            return;
+        }
+
+        double feeAmount = readPositiveAmount("Enter fee amount: ");
+        bank.collectFee(accountIndex, feeAmount);
+        System.out.println("Fee collected.");
+    }
+
+    private void searchAccountsByUsername() {
+        String username = readNonBlank("Enter username: ");
+        String summary = bank.getAccountsSummaryForUser(username);
+        if (summary.trim().isEmpty()) {
+            System.out.println("No accounts found for " + username + ".");
+            return;
+        }
+        System.out.println("\nAccounts for " + username + ":");
+        System.out.println(summary);
+    }
+
+    private String readNonBlank(String prompt) {
+        String value = "";
+        while (value.trim().isEmpty()) {
+            System.out.print(prompt);
+            value = keyboardInput.nextLine();
+            if (value.trim().isEmpty()) {
+                System.out.println("Input cannot be empty.");
+            }
+        }
+        return value.trim();
+    }
+
+    private String readPin() {
+        String pin = "";
+        while (!pin.matches("\\d{4}")) {
+            System.out.print("Enter a 4-digit PIN: ");
+            pin = keyboardInput.nextLine();
+            if (!pin.matches("\\d{4}")) {
+                System.out.println("PIN must be exactly 4 digits.");
+            }
+        }
+        return pin;
+    }
+
+    private int readIntInRange(int min, int max) {
+        int value = min - 1;
+        while (value < min || value > max) {
+            System.out.print("Please make a selection: ");
+            String line = keyboardInput.nextLine();
+            try {
+                value = Integer.parseInt(line.trim());
+            } catch (NumberFormatException e) {
+                value = min - 1;
+            }
+            if (value < min || value > max) {
+                System.out.println("Invalid selection. Enter a number between " + min + " and " + max + ".");
+            }
+        }
+        return value;
+    }
+
+    private double readPositiveAmount(String prompt) {
+        double amount = -1;
+        while (amount <= 0) {
+            System.out.print(prompt);
+            String line = keyboardInput.nextLine();
+            try {
+                amount = Double.parseDouble(line.trim());
+            } catch (NumberFormatException e) {
+                amount = -1;
+            }
+            if (amount <= 0) {
+                System.out.println("Amount must be greater than 0.");
+            }
+        }
+        return amount;
+    }
+
+    private boolean readYesNo(String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String value = keyboardInput.nextLine().trim().toLowerCase();
+            if ("y".equals(value) || "yes".equals(value)) {
+                return true;
+            }
+            if ("n".equals(value) || "no".equals(value)) {
+                return false;
+            }
+            System.out.println("Please enter y or n.");
+        }
     }
 }

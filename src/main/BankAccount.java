@@ -6,30 +6,39 @@ import java.util.List;
 public class BankAccount {
 
     private String name;
+    private String owner;
     private double balance;
     private List<String> transactionHistory;
     private boolean open;
+    private String type;
+    private double withdrawalLimit;
 
     public BankAccount() {
-        this("Account");
+        this("Account", "Checking");
     }
 
-    public BankAccount(String name) {
+    public BankAccount(String name, String type) {
         this.balance = 0;
         this.open = true;
         this.transactionHistory = new ArrayList<>();
         this.name = name;
+        this.type = type;
+        this.owner = "Unassigned";
+        this.withdrawalLimit = 20.0;
     }
 
     public void deposit(double amount) {
-        if (amount > 0 && open) {
-            this.balance += amount;
-            transactionHistory.add(
-                String.format("Deposited $%.2f | New balance: $%.2f", amount, balance)
-            );
-        } else {
-            throw new IllegalArgumentException();
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Deposit amount must be greater than 0.");
         }
+        if (!open) {
+            throw new IllegalArgumentException("Account is closed.");
+        }
+
+        this.balance += amount;
+        transactionHistory.add(
+            String.format("Deposited $%.2f | New balance: $%.2f", amount, balance)
+        );
     }
 
     public boolean withdraw(double amount) {
@@ -95,6 +104,10 @@ public class BankAccount {
         this.balance = amount;
     }
 
+    protected void addTransaction(String transaction) {
+        transactionHistory.add(transaction);
+    }
+
     public List<String> getTransactionHistory() {
         return this.transactionHistory;
     }
@@ -133,5 +146,27 @@ public class BankAccount {
 
     public String getName() {
         return this.name;
+    }
+
+    public String getType() {
+        return this.type;
+    }
+    public double getWithdrawalLimit() {
+        return this.withdrawalLimit;
+    }
+        public void setWithdrawalLimit(double withdrawalLimit) {
+    this.withdrawalLimit = withdrawalLimit;
+
+    }
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        if (owner == null || owner.trim().isEmpty()) {
+            this.owner = "Unassigned";
+        } else {
+            this.owner = owner.trim();
+        }
     }
 }

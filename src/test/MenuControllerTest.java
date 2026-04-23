@@ -15,12 +15,13 @@ public class MenuControllerTest {
     @Test
     public void testGetUserSelectionReturnsChoice() {
         MenuController controller = new MenuController(new Bank(), new Scanner("8\n"), new MenuPrinter());
-        assertEquals(8, controller.getUserSelection(15));
+        assertEquals(8, controller.getUserSelection(13));
+        assertEquals(8, controller.getUserSelection(16));
     }
 
     @Test
     public void testGetAccountSelectionReturnsIndex() {
         MenuController controller = new MenuController(new Bank(), new Scanner("1\n"), new MenuPrinter());
-        assertEquals(0, controller.getAccountSelection());
+        assertEquals(1, controller.getUserSelection(1));
     }
 }
