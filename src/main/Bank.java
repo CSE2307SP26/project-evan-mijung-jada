@@ -14,9 +14,10 @@ public class Bank {
     }
 
     public void createAdditionalAccount(String type) {
-        if(type.equals("checking")) {
+        String normalizedType = type == null ? "" : type.trim().toLowerCase();
+        if (normalizedType.isEmpty() || "checking".equals(normalizedType)) {
             accounts.add(new CheckingAccount("Account " + (accounts.size() + 1)));
-        } else if(type.equals("savings")) {
+        } else if ("savings".equals(normalizedType)) {
             accounts.add(new SavingsAccount("Account " + (accounts.size() + 1)));
         } else {
             throw new IllegalArgumentException("Invalid account type.");

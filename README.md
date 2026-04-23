@@ -1,11 +1,18 @@
 # project26
 
-## What commands are needed to compile and run your code from the command line?
+## Command line to compile and run the code from the command line
 
 ```bash
 chmod +x runApp.sh
 ./runApp.sh
 ```
+
+## Command line to run tests
+```bash
+javac -d bin -cp "lib/junit-platform-console-standalone-1.13.0-M3.jar" $(find src -name "*.java")
+java -jar lib/junit-platform-console-standalone-1.13.0-M3.jar --class-path bin --scan-class-path
+```
+
 ## Team Members:
 
 * Mijung 
@@ -50,7 +57,7 @@ chmod +x runApp.sh
 ## Is there anything that you implemented but doesn't currently work?
 
 We believe the application is fully functioning.
-
+j
 ## Additional notes
 
 - On launch, choose: (1) create a user profile, (2) login with existing profile, or (3) login as admin.
