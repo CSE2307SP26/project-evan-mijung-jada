@@ -28,7 +28,7 @@ chmod +x runApp.sh
 12. A bank customer should be able to see if an account is open or closed. (Jada)
 13. A bank customer should be able to reopen a closed account. (Jada)
 
-## What user stories were completed this iteration 2?
+## What user stories were completed in iteration 2?
 
 * A bank administrator should be able to collect fees from existing accounts when necessary. (Mijung)
 * A bank administrator should be able to add an interest payment to an existing account when necessary. (Mijung)
@@ -38,7 +38,7 @@ chmod +x runApp.sh
 * A bank customer should be able to reopen a closed account. (Jada)
 * Try cache in main menu to handle negative deposit and avoid getting program to crash when user puts text for number input.
 
-## What user stories do you intend to complete next iteration?
+## What user stories were completed in iteration 3?
 
 * A bank customer should be able to create a user profile with a username and PIN.(Mijung)
 * A bank customer should be able to log in using their username and PIN.(Mijung)
@@ -54,7 +54,6 @@ We believe the application is fully functioning.
 ## Additional notes
 
 - On launch, choose: (1) create a user profile, (2) login with existing profile, or (3) login as admin.
-- Admin login uses passcode 0000 and unlocks interest payment and fee collection options.
 - Admin features are available by choosing menu option 13 (Admin mode) and entering passcode 0000.
 - Once admin mode is enabled, options 14 and 15 appear for interest payments and fee collection.
 
